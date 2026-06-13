@@ -1,0 +1,12 @@
+{
+  "name": "agencyos",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm start --prefix client/agencyos-client",
+    "start": "npm start --prefix client/agencyos-client",
+    "build": "npm run build --prefix client/agencyos-client",
+    "watch": "npm run watch --prefix client/agencyos-client",
+    "test": "npm test --prefix client/agencyos-client"
+  }
+}

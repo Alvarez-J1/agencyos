@@ -1,0 +1,24 @@
+<aside class="sidebar" aria-label="AgencyOS navigation">
+  <a class="sidebar-brand" routerLink="/dashboard">
+    <span class="brand-mark">AO</span>
+    <span>AgencyOS</span>
+  </a>
+
+  <nav class="sidebar-nav">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.exact }"
+        ariaCurrentWhenActive="page"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <p>Freelance workspace</p>
+    <a routerLink="/login">Log out preview</a>
+  </div>
+</aside>

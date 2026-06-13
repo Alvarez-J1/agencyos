@@ -1,0 +1,58 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Relationships</p>
+      <h1 class="page-title">Clients</h1>
+      <p class="page-description">Search client accounts, review project load, and jump into a client workspace.</p>
+    </div>
+
+    <button class="primary-button" type="button">New Client</button>
+  </div>
+
+  <div class="clients-toolbar">
+    <label for="client-search">Search clients</label>
+    <input
+      id="client-search"
+      name="client-search"
+      type="search"
+      placeholder="Search by name, company, email, or status"
+      [value]="searchTerm"
+      (input)="onSearchChange($event)"
+    />
+  </div>
+
+  @if (filteredClients.length > 0) {
+    <div class="clients-table">
+      <div class="clients-row clients-row-header">
+        <span>Client</span>
+        <span>Email</span>
+        <span>Status</span>
+        <span>Active Projects</span>
+        <span>Last Contact</span>
+        <span></span>
+      </div>
+
+      @for (client of filteredClients; track client.id) {
+        <div class="clients-row">
+          <div>
+            <strong>{{ client.name }}</strong>
+            <p class="data-label">{{ client.company }}</p>
+          </div>
+          <a class="client-email" href="mailto:{{ client.email }}">{{ client.email }}</a>
+          <span class="status-pill" [class.status-paused]="client.status === 'Paused'">
+            {{ client.status }}
+          </span>
+          <span>{{ client.activeProjects }}</span>
+          <span>{{ client.lastContact }}</span>
+          <a class="text-link" [routerLink]="['/clients', client.id]">View</a>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <h2>No clients found</h2>
+      <p>Try a different search term or add your first client when client creation is built.</p>
+      <button class="primary-button" type="button">New Client</button>
+    </div>
+  }
+</section>
