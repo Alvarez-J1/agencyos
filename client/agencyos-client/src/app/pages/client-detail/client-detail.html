@@ -1,27 +1,73 @@
 <section class="page">
-  <div class="page-header">
-    <div>
-      <p class="eyebrow">Client detail</p>
-      <h1 class="page-title">Client #{{ clientId }}</h1>
-      <p class="page-description">This route proves the app can read a client id from the URL.</p>
+  @if (client; as selectedClient) {
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Client detail</p>
+        <h1 class="page-title">{{ selectedClient.name }}</h1>
+        <p class="page-description">{{ selectedClient.company }} account overview and latest activity.</p>
+      </div>
+
+      <a class="back-button" routerLink="/clients">Back to Clients</a>
     </div>
-    <a class="text-link" routerLink="/clients">Back to clients</a>
-  </div>
 
-  <div class="card-grid">
-    <article class="card">
-      <h2>Contact</h2>
-      <p>Primary contact, email, and company notes will live here when data is connected.</p>
-    </article>
+    <div class="client-summary">
+      <article class="card summary-card">
+        <span class="summary-label">Company</span>
+        <strong>{{ selectedClient.company }}</strong>
+      </article>
 
-    <article class="card">
-      <h2>Projects</h2>
-      <p>Client-specific projects will be listed from the API in a later step.</p>
-    </article>
+      <article class="card summary-card">
+        <span class="summary-label">Email</span>
+        <a class="detail-link" href="mailto:{{ selectedClient.email }}">{{ selectedClient.email }}</a>
+      </article>
 
-    <article class="card">
-      <h2>Tasks</h2>
-      <p>Open tasks for this client will be filtered here.</p>
+      <article class="card summary-card">
+        <span class="summary-label">Status</span>
+        <span
+          class="status-pill"
+          [class.status-onboarding]="selectedClient.status === 'Onboarding'"
+          [class.status-paused]="selectedClient.status === 'Paused'"
+        >
+          {{ selectedClient.status }}
+        </span>
+      </article>
+
+      <article class="card summary-card">
+        <span class="summary-label">Active Projects</span>
+        <strong>{{ selectedClient.activeProjects }}</strong>
+      </article>
+
+      <article class="card summary-card">
+        <span class="summary-label">Last Contact</span>
+        <strong>{{ selectedClient.lastContact }}</strong>
+      </article>
+    </div>
+
+    <article class="card activity-card">
+      <div class="section-heading">
+        <h2>Recent Activity</h2>
+        <p>Static activity entries for this client.</p>
+      </div>
+
+      <div class="activity-list">
+        @for (activity of recentActivity; track activity.id) {
+          <div class="activity-item">
+            <div>
+              <strong>{{ activity.title }}</strong>
+              <p>{{ activity.note }}</p>
+            </div>
+            <span>{{ activity.date }}</span>
+          </div>
+        } @empty {
+          <p class="empty-copy">No recent activity for this client yet.</p>
+        }
+      </div>
     </article>
-  </div>
+  } @else {
+    <div class="empty-state">
+      <h1 class="page-title">Client not found</h1>
+      <p>No mock client matches this route.</p>
+      <a class="back-button" routerLink="/clients">Back to Clients</a>
+    </div>
+  }
 </section>
