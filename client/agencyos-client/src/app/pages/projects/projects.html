@@ -3,24 +3,73 @@
     <div>
       <p class="eyebrow">Delivery</p>
       <h1 class="page-title">Projects</h1>
-      <p class="page-description">Organize client work by project, timeline, and current status.</p>
+      <p class="page-description">Search and filter active client projects with static frontend data.</p>
     </div>
   </div>
 
-  <div class="card-grid">
-    <article class="card">
-      <h2>Website redesign</h2>
-      <p>Discovery complete. Wireframes are ready for client review.</p>
-    </article>
+  <div class="projects-toolbar">
+    <label>
+      Search projects
+      <input
+        type="search"
+        placeholder="Search by project, client, status, or due date"
+        [value]="searchTerm"
+        (input)="onSearchChange($event)"
+      />
+    </label>
 
-    <article class="card">
-      <h2>Launch campaign</h2>
-      <p>Copywriting and landing page build are currently in progress.</p>
-    </article>
-
-    <article class="card">
-      <h2>Monthly retainer</h2>
-      <p>Ongoing design, reporting, and content support.</p>
-    </article>
+    <label>
+      Status
+      <select [value]="selectedStatus" (change)="onStatusChange($event)">
+        @for (status of statusOptions; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
   </div>
+
+  @if (filteredProjects.length > 0) {
+    <div class="projects-table">
+      <div class="projects-row projects-row-header">
+        <span>Project</span>
+        <span>Client</span>
+        <span>Status</span>
+        <span>Due Date</span>
+        <span>Progress</span>
+        <span></span>
+      </div>
+
+      @for (project of filteredProjects; track project.id) {
+        <div class="projects-row">
+          <div>
+            <strong>{{ project.name }}</strong>
+            <p class="data-label">ID #{{ project.id }}</p>
+          </div>
+          <span>{{ project.client }}</span>
+          <span
+            class="project-status"
+            [class.status-planning]="project.status === 'Planning'"
+            [class.status-progress]="project.status === 'In Progress'"
+            [class.status-review]="project.status === 'Review'"
+            [class.status-completed]="project.status === 'Completed'"
+          >
+            {{ project.status }}
+          </span>
+          <span>{{ project.dueDate }}</span>
+          <div class="progress-cell">
+            <div class="progress-track" aria-hidden="true">
+              <span [style.width.%]="project.progress"></span>
+            </div>
+            <strong>{{ project.progress }}%</strong>
+          </div>
+          <button class="view-button" type="button">View</button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <h2>No projects found</h2>
+      <p>Try a different search term or status filter.</p>
+    </div>
+  }
 </section>
