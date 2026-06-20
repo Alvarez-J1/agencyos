@@ -3,39 +3,103 @@
     <div>
       <p class="eyebrow">Execution</p>
       <h1 class="page-title">Tasks</h1>
-      <p class="page-description">A place for agency to-dos before task data is wired to the backend.</p>
+      <p class="page-description">Search, filter, and complete task rows from the AgencyOS API.</p>
     </div>
   </div>
 
-  <div class="data-table">
-    <div class="data-row">
-      <div>
-        <strong>Send homepage mockups</strong>
-        <p class="data-label">Northstar Studio</p>
-      </div>
-      <span>Today</span>
-      <span class="status-pill">In progress</span>
-      <span>Design</span>
-    </div>
+  <div class="tasks-toolbar">
+    <label>
+      Search tasks
+      <input
+        type="search"
+        placeholder="Search by task, project, assignee, or due date"
+        [value]="searchTerm"
+        (input)="onSearchChange($event)"
+      />
+    </label>
 
-    <div class="data-row">
-      <div>
-        <strong>Review onboarding copy</strong>
-        <p class="data-label">BrightPath Coaching</p>
-      </div>
-      <span>Tomorrow</span>
-      <span class="status-pill">Open</span>
-      <span>Content</span>
-    </div>
+    <label>
+      Status
+      <select [value]="selectedStatus" (change)="onStatusChange($event)">
+        @for (status of statusOptions; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
 
-    <div class="data-row">
-      <div>
-        <strong>Prepare monthly report</strong>
-        <p class="data-label">Harbor Legal Group</p>
-      </div>
-      <span>Friday</span>
-      <span class="status-pill">Open</span>
-      <span>Ops</span>
-    </div>
+    <label>
+      Priority
+      <select [value]="selectedPriority" (change)="onPriorityChange($event)">
+        @for (priority of priorityOptions; track priority) {
+          <option [value]="priority">{{ priority }}</option>
+        }
+      </select>
+    </label>
   </div>
+
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h2 class="loading-indicator">Loading tasks</h2>
+      <p>Fetching task records from the AgencyOS API.</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-panel state-panel-error" role="alert">
+      <h2>Tasks unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (filteredTasks.length > 0) {
+    <div class="tasks-table">
+      <div class="tasks-row tasks-row-header">
+        <span>Task</span>
+        <span>Project</span>
+        <span>Assignee</span>
+        <span>Priority</span>
+        <span>Status</span>
+        <span>Due Date</span>
+        <span></span>
+      </div>
+
+      @for (task of filteredTasks; track task.id) {
+        <div class="tasks-row">
+          <div>
+            <strong>{{ task.title }}</strong>
+            <p class="data-label">ID #{{ task.id }}</p>
+          </div>
+          <span>{{ task.project }}</span>
+          <span>{{ task.assignee }}</span>
+          <span
+            class="priority-badge"
+            [class.priority-low]="task.priority === 'Low'"
+            [class.priority-medium]="task.priority === 'Medium'"
+            [class.priority-high]="task.priority === 'High'"
+          >
+            {{ task.priority }}
+          </span>
+          <span
+            class="task-status"
+            [class.status-todo]="task.status === 'Todo'"
+            [class.status-progress]="task.status === 'In Progress'"
+            [class.status-completed]="task.status === 'Completed'"
+          >
+            {{ task.status }}
+          </span>
+          <span>{{ task.dueDate }}</span>
+          <button
+            class="complete-button"
+            type="button"
+            [disabled]="task.status === 'Completed'"
+            [attr.aria-label]="'Mark ' + task.title + ' complete'"
+            (click)="markComplete(task.id)"
+          >
+            Mark Complete
+          </button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="state-panel">
+      <h2>No tasks found</h2>
+      <p>Try a different search term, status, or priority filter.</p>
+    </div>
+  }
 </section>

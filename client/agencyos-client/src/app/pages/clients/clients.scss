@@ -5,7 +5,7 @@
 .clients-toolbar {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
   display: grid;
   gap: 8px;
@@ -18,7 +18,7 @@
 
 .clients-toolbar input {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   min-height: 44px;
   padding: 10px 12px;
   width: min(100%, 520px);
@@ -27,7 +27,7 @@
 .clients-table {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
 }
@@ -38,7 +38,7 @@
   display: grid;
   gap: 16px;
   grid-template-columns: 1.3fr 1.3fr 0.8fr 0.8fr 1fr auto;
-  padding: 16px 20px;
+  padding: 17px 20px;
 }
 
 .clients-row:last-child {
@@ -87,9 +87,26 @@
 }
 
 @media (max-width: 980px) {
+  .clients-table {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    display: grid;
+    gap: 12px;
+    overflow: visible;
+  }
+
   .clients-row,
   .clients-row-header {
     grid-template-columns: 1fr;
+  }
+
+  .clients-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    padding: 18px;
   }
 
   .clients-row-header {

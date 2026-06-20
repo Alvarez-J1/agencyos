@@ -1,61 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
-type ProjectStatus = 'Planning' | 'In Progress' | 'Review' | 'Completed';
-
-type Project = {
-  id: number;
-  name: string;
-  client: string;
-  status: ProjectStatus;
-  dueDate: string;
-  progress: number;
-};
+import { Project, ProjectStatus } from '../../models/project.model';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.html',
   styleUrl: './projects.scss'
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit {
+  private readonly projectService = inject(ProjectService);
+
   searchTerm = '';
   selectedStatus: ProjectStatus | 'All' = 'All';
+  isLoading = true;
+  errorMessage = '';
 
   statusOptions: Array<ProjectStatus | 'All'> = ['All', 'Planning', 'In Progress', 'Review', 'Completed'];
 
-  projects: Project[] = [
-    {
-      id: 101,
-      name: 'Website redesign',
-      client: 'Northstar Studio',
-      status: 'In Progress',
-      dueDate: 'Jul 12, 2026',
-      progress: 68
-    },
-    {
-      id: 102,
-      name: 'Launch campaign',
-      client: 'BrightPath Coaching',
-      status: 'Planning',
-      dueDate: 'Jul 24, 2026',
-      progress: 25
-    },
-    {
-      id: 103,
-      name: 'Monthly retainer',
-      client: 'Harbor Legal Group',
-      status: 'Review',
-      dueDate: 'Jun 28, 2026',
-      progress: 82
-    },
-    {
-      id: 104,
-      name: 'Client portal refresh',
-      client: 'Summit Fitness Co.',
-      status: 'Completed',
-      dueDate: 'Jun 2, 2026',
-      progress: 100
-    }
-  ];
+  projects: Project[] = [];
+
+  ngOnInit(): void {
+    this.projectService.getProjects().subscribe({
+      next: (projects) => {
+        this.projects = projects;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Projects could not be loaded.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   get filteredProjects(): Project[] {
     const search = this.searchTerm.trim().toLowerCase();

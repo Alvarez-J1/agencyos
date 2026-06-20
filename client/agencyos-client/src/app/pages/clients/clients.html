@@ -21,7 +21,17 @@
     />
   </div>
 
-  @if (filteredClients.length > 0) {
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h2 class="loading-indicator">Loading clients</h2>
+      <p>Fetching client records from the AgencyOS API.</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-panel state-panel-error" role="alert">
+      <h2>Clients unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (filteredClients.length > 0) {
     <div class="clients-table">
       <div class="clients-row clients-row-header">
         <span>Client</span>
@@ -49,7 +59,7 @@
       }
     </div>
   } @else {
-    <div class="empty-state">
+    <div class="state-panel">
       <h2>No clients found</h2>
       <p>Try a different search term or add your first client when client creation is built.</p>
       <button class="primary-button" type="button">New Client</button>

@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { Client, MOCK_CLIENTS } from '../../data/clients.mock';
+import { Client } from '../../models/client.model';
+import { ClientService } from '../../services/client.service';
 
 type ClientActivity = {
   id: number;
@@ -17,12 +18,15 @@ type ClientActivity = {
   templateUrl: './client-detail.html',
   styleUrl: './client-detail.scss'
 })
-export class ClientDetailComponent {
+export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly clientService = inject(ClientService);
 
   private readonly clientId = Number(this.route.snapshot.paramMap.get('id'));
 
-  client: Client | undefined = MOCK_CLIENTS.find((client) => client.id === this.clientId);
+  client: Client | undefined;
+  isLoading = true;
+  errorMessage = '';
 
   activities: ClientActivity[] = [
     {
@@ -61,6 +65,19 @@ export class ClientDetailComponent {
       note: 'Moved current requests to backlog until the client resumes.'
     }
   ];
+
+  ngOnInit(): void {
+    this.clientService.getClient(this.clientId).subscribe({
+      next: (client) => {
+        this.client = client;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Client could not be loaded.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   get recentActivity(): ClientActivity[] {
     if (!this.client) {

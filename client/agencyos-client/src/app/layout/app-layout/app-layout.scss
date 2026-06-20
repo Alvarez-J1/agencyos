@@ -1,6 +1,6 @@
 .app-shell {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: minmax(232px, 260px) minmax(0, 1fr);
   min-height: 100dvh;
 }
 
@@ -11,15 +11,11 @@
 }
 
 .main-content {
-  padding: 28px;
+  padding: clamp(18px, 3vw, 32px);
 }
 
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
-  }
-
-  .main-content {
-    padding: 20px;
   }
 }

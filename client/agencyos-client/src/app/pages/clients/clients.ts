@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Client, MOCK_CLIENTS } from '../../data/clients.mock';
+import { Client } from '../../models/client.model';
+import { ClientService } from '../../services/client.service';
 
 @Component({
   selector: 'app-clients',
@@ -9,10 +10,27 @@ import { Client, MOCK_CLIENTS } from '../../data/clients.mock';
   templateUrl: './clients.html',
   styleUrl: './clients.scss'
 })
-export class ClientsComponent {
-  searchTerm = '';
+export class ClientsComponent implements OnInit {
+  private readonly clientService = inject(ClientService);
 
-  clients = MOCK_CLIENTS;
+  searchTerm = '';
+  isLoading = true;
+  errorMessage = '';
+
+  clients: Client[] = [];
+
+  ngOnInit(): void {
+    this.clientService.getClients().subscribe({
+      next: (clients) => {
+        this.clients = clients;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Clients could not be loaded.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   get filteredClients(): Client[] {
     const search = this.searchTerm.trim().toLowerCase();

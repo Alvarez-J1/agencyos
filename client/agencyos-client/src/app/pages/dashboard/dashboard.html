@@ -3,32 +3,85 @@
     <div>
       <p class="eyebrow">Overview</p>
       <h1 class="page-title">Dashboard</h1>
-      <p class="page-description">A simple command center for client work, active projects, and tasks.</p>
+      <p class="page-description">A simple command center powered by the AgencyOS API.</p>
     </div>
   </div>
 
-  <div class="card-grid">
-    <article class="card">
-      <h2>Clients</h2>
-      <p>Active client accounts</p>
-      <span class="metric">12</span>
-    </article>
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h2 class="loading-indicator">Loading dashboard</h2>
+      <p>Fetching clients, projects, and tasks.</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-panel state-panel-error" role="alert">
+      <h2>Dashboard unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else {
+    <div class="metric-grid">
+      <article class="card metric-card">
+        <span>Total Clients</span>
+        <strong>{{ totalClients }}</strong>
+      </article>
 
-    <article class="card">
-      <h2>Projects</h2>
-      <p>Projects in progress</p>
-      <span class="metric">8</span>
-    </article>
+      <article class="card metric-card">
+        <span>Active Projects</span>
+        <strong>{{ activeProjects }}</strong>
+      </article>
 
-    <article class="card">
-      <h2>Tasks</h2>
-      <p>Tasks due this week</p>
-      <span class="metric">24</span>
-    </article>
-  </div>
+      <article class="card metric-card">
+        <span>Completed Projects</span>
+        <strong>{{ completedProjects }}</strong>
+      </article>
 
-  <article class="card">
-    <h2>Today</h2>
-    <p>Review client feedback, update project timelines, and prepare the next batch of tasks.</p>
-  </article>
+      <article class="card metric-card">
+        <span>Pending Tasks</span>
+        <strong>{{ pendingTasks }}</strong>
+      </article>
+
+      <article class="card metric-card">
+        <span>Completed Tasks</span>
+        <strong>{{ completedTasks }}</strong>
+      </article>
+    </div>
+
+    <div class="dashboard-grid">
+      <article class="card">
+        <h2>Recent Activity</h2>
+        <div class="activity-list">
+          @for (activity of recentActivity; track activity) {
+            <p>{{ activity }}</p>
+          }
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Upcoming Deadlines</h2>
+        @if (upcomingDeadlines.length > 0) {
+          <div class="deadline-list">
+            @for (deadline of upcomingDeadlines; track deadline.title) {
+              <div>
+                <strong>{{ deadline.title }}</strong>
+                <span>{{ deadline.label }} due {{ deadline.dueDate }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p>No upcoming deadlines.</p>
+        }
+      </article>
+
+      <article class="card">
+        <h2>Project Status Overview</h2>
+        <div class="status-overview">
+          @for (item of projectStatusOverview; track item.status) {
+            <div>
+              <span>{{ item.status }}</span>
+              <strong>{{ item.count }}</strong>
+            </div>
+          }
+        </div>
+      </article>
+    </div>
+  }
 </section>

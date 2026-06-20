@@ -1,28 +1,88 @@
-<section class="auth-page">
-  <div class="auth-card">
+<section class="auth-shell">
+  <div class="auth-copy-panel">
     <a class="brand-link" routerLink="/dashboard">AgencyOS</a>
+    <h1>Start with a workspace built for agency delivery.</h1>
+    <p>Keep client relationships, projects, and tasks organized from day one.</p>
+  </div>
 
+  <div class="auth-panel">
     <p class="eyebrow">Start organized</p>
-    <h1>Create account</h1>
-    <p class="auth-copy">Set up the front-end entry point now. User registration will connect to the API later.</p>
+    <h2>Create account</h2>
+    <p class="auth-muted">Create an account and store your login session with a JWT.</p>
 
-    <form class="auth-form">
+    @if (errorMessage) {
+      <div class="form-alert" role="alert">{{ errorMessage }}</div>
+    }
+
+    <form class="auth-form-modern" (ngSubmit)="submit()">
       <label>
         Name
-        <input type="text" placeholder="Your name" />
+        <input
+          name="name"
+          type="text"
+          placeholder="Your name"
+          [(ngModel)]="form.name"
+          [class.input-error]="nameInvalid"
+          [attr.aria-invalid]="nameInvalid"
+        />
+        @if (nameInvalid) {
+          <span class="field-error">Name should be at least 2 characters.</span>
+        }
       </label>
 
       <label>
         Email
-        <input type="email" placeholder="you@example.com" />
+        <input
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          [(ngModel)]="form.email"
+          [class.input-error]="emailInvalid"
+          [attr.aria-invalid]="emailInvalid"
+        />
+        @if (emailInvalid) {
+          <span class="field-error">Enter a valid email address.</span>
+        }
       </label>
 
       <label>
         Password
-        <input type="password" placeholder="Create a password" />
+        <div class="password-field">
+          <input
+            name="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="At least 8 characters"
+            [(ngModel)]="form.password"
+            [class.input-error]="passwordInvalid"
+            [attr.aria-invalid]="passwordInvalid"
+          />
+          <button type="button" (click)="togglePassword()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        @if (passwordInvalid) {
+          <span class="field-error">Password must be at least 8 characters.</span>
+        }
       </label>
 
-      <button class="primary-button" type="button">Sign up</button>
+      <label>
+        Confirm password
+        <input
+          name="confirmPassword"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Repeat password"
+          [(ngModel)]="form.confirmPassword"
+          [class.input-error]="confirmPasswordInvalid"
+          [attr.aria-invalid]="confirmPasswordInvalid"
+        />
+        @if (confirmPasswordInvalid) {
+          <span class="field-error">Passwords must match.</span>
+        }
+      </label>
+
+      <button class="primary-button" type="submit" [disabled]="isLoading" [attr.aria-busy]="isLoading">
+        {{ isLoading ? 'Creating...' : 'Create account' }}
+      </button>
     </form>
 
     <p class="auth-switch">

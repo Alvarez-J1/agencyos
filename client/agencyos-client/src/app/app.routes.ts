@@ -9,6 +9,7 @@ import { ProjectsComponent } from './pages/projects/projects';
 import { SettingsComponent } from './pages/settings/settings';
 import { SignupComponent } from './pages/signup/signup';
 import { TasksComponent } from './pages/tasks/tasks';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,8 @@ export const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       {
         path: '',

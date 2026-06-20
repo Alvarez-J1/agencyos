@@ -1,14 +1,18 @@
 :root {
-  --color-background: #f6f7fb;
+  --color-background: #f5f7fb;
   --color-surface: #ffffff;
   --color-surface-muted: #eef3f8;
   --color-border: #d9e2ec;
+  --color-border-strong: #b9c6d6;
   --color-text: #172033;
   --color-muted: #667085;
   --color-primary: #2563eb;
   --color-primary-dark: #1d4ed8;
+  --color-danger: #b91c1c;
+  --color-danger-surface: #fef2f2;
   --color-success: #0f766e;
-  --shadow-soft: 0 18px 45px rgba(20, 32, 55, 0.08);
+  --radius-md: 8px;
+  --shadow-soft: 0 14px 34px rgba(20, 32, 55, 0.07);
 }
 
 * {
@@ -25,6 +29,7 @@ body {
   background: var(--color-background);
   color: var(--color-text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
 }
 
 a {
@@ -39,9 +44,44 @@ textarea {
   font: inherit;
 }
 
+button,
+a,
+input,
+select,
+textarea {
+  outline-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
 .page {
   display: grid;
   gap: 24px;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 100%;
 }
 
 .page-header {
@@ -61,7 +101,8 @@ textarea {
 }
 
 .page-title {
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-size: clamp(1.8rem, 2.6vw, 2.35rem);
+  font-weight: 850;
   line-height: 1.1;
   margin: 0;
 }
@@ -82,9 +123,9 @@ textarea {
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
-  padding: 20px;
+  padding: 22px;
 }
 
 .card h2,
@@ -153,6 +194,61 @@ textarea {
   color: var(--color-primary-dark);
 }
 
+.state-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 32px;
+}
+
+.state-panel h1,
+.state-panel h2,
+.state-panel p {
+  margin: 0;
+}
+
+.state-panel p {
+  color: var(--color-muted);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.state-panel-error {
+  background: var(--color-danger-surface);
+  border-color: #fecaca;
+}
+
+.state-panel-error h1,
+.state-panel-error h2 {
+  color: var(--color-danger);
+}
+
+.loading-indicator {
+  align-items: center;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.loading-indicator::before {
+  animation: spin 0.8s linear infinite;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 999px;
+  content: "";
+  height: 18px;
+  width: 18px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .auth-page {
   align-items: center;
   display: flex;
@@ -164,7 +260,7 @@ textarea {
 .auth-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
   max-width: 440px;
   padding: 32px;
@@ -207,7 +303,7 @@ textarea {
 .settings-form input,
 .settings-form select {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--color-text);
   min-height: 44px;
   padding: 10px 12px;
@@ -216,7 +312,7 @@ textarea {
 .primary-button {
   background: var(--color-primary);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: #ffffff;
   cursor: pointer;
   font-weight: 800;
@@ -226,6 +322,10 @@ textarea {
 
 .primary-button:hover {
   background: var(--color-primary-dark);
+}
+
+.primary-button:disabled {
+  opacity: 0.68;
 }
 
 .settings-form {
@@ -238,6 +338,16 @@ textarea {
   .page-header,
   .data-row {
     align-items: stretch;
+    flex-direction: column;
     grid-template-columns: 1fr;
+  }
+
+  .page {
+    gap: 18px;
+  }
+
+  .card,
+  .state-panel {
+    padding: 18px;
   }
 }

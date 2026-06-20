@@ -1,5 +1,10 @@
 <section class="page">
-  @if (client; as selectedClient) {
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h1 class="page-title loading-indicator">Loading client</h1>
+      <p>Fetching client details from the AgencyOS API.</p>
+    </div>
+  } @else if (client; as selectedClient) {
     <div class="page-header">
       <div>
         <p class="eyebrow">Client detail</p>
@@ -64,9 +69,9 @@
       </div>
     </article>
   } @else {
-    <div class="empty-state">
+    <div class="state-panel state-panel-error" role="alert">
       <h1 class="page-title">Client not found</h1>
-      <p>No mock client matches this route.</p>
+      <p>{{ errorMessage || 'No client matches this route.' }}</p>
       <a class="back-button" routerLink="/clients">Back to Clients</a>
     </div>
   }

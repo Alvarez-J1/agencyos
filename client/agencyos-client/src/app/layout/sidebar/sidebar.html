@@ -4,7 +4,7 @@
     <span>AgencyOS</span>
   </a>
 
-  <nav class="sidebar-nav">
+  <nav class="sidebar-nav" aria-label="Primary">
     @for (item of navItems; track item.route) {
       <a
         [routerLink]="item.route"
@@ -19,6 +19,6 @@
 
   <div class="sidebar-footer">
     <p>Freelance workspace</p>
-    <a routerLink="/login">Log out preview</a>
+    <a routerLink="/login">Account access</a>
   </div>
 </aside>

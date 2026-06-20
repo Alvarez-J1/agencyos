@@ -1,23 +1,58 @@
-<section class="auth-page">
-  <div class="auth-card">
+<section class="auth-shell">
+  <div class="auth-copy-panel">
     <a class="brand-link" routerLink="/dashboard">AgencyOS</a>
+    <h1>Run client work with calm control.</h1>
+    <p>Manage clients, projects, and tasks from one focused freelance operations dashboard.</p>
+  </div>
 
+  <div class="auth-panel">
     <p class="eyebrow">Welcome back</p>
-    <h1>Log in</h1>
-    <p class="auth-copy">Access your agency workspace. Authentication logic will be added later.</p>
+    <h2>Log in</h2>
+    <p class="auth-muted">Log in with your AgencyOS account to access protected workspace data.</p>
 
-    <form class="auth-form">
+    @if (errorMessage) {
+      <div class="form-alert" role="alert">{{ errorMessage }}</div>
+    }
+
+    <form class="auth-form-modern" (ngSubmit)="submit()">
       <label>
         Email
-        <input type="email" placeholder="you@example.com" />
+        <input
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          [(ngModel)]="form.email"
+          [class.input-error]="emailInvalid"
+          [attr.aria-invalid]="emailInvalid"
+        />
+        @if (emailInvalid) {
+          <span class="field-error">Enter a valid email address.</span>
+        }
       </label>
 
       <label>
         Password
-        <input type="password" placeholder="Enter your password" />
+        <div class="password-field">
+          <input
+            name="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="At least 8 characters"
+            [(ngModel)]="form.password"
+            [class.input-error]="passwordInvalid"
+            [attr.aria-invalid]="passwordInvalid"
+          />
+          <button type="button" (click)="togglePassword()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        @if (passwordInvalid) {
+          <span class="field-error">Password must be at least 8 characters.</span>
+        }
       </label>
 
-      <button class="primary-button" type="button">Log in</button>
+      <button class="primary-button" type="submit" [disabled]="isLoading" [attr.aria-busy]="isLoading">
+        {{ isLoading ? 'Checking...' : 'Log in' }}
+      </button>
     </form>
 
     <p class="auth-switch">

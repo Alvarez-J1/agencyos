@@ -28,7 +28,17 @@
     </label>
   </div>
 
-  @if (filteredProjects.length > 0) {
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h2 class="loading-indicator">Loading projects</h2>
+      <p>Fetching project records from the AgencyOS API.</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-panel state-panel-error" role="alert">
+      <h2>Projects unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (filteredProjects.length > 0) {
     <div class="projects-table">
       <div class="projects-row projects-row-header">
         <span>Project</span>
@@ -67,7 +77,7 @@
       }
     </div>
   } @else {
-    <div class="empty-state">
+    <div class="state-panel">
       <h2>No projects found</h2>
       <p>Try a different search term or status filter.</p>
     </div>

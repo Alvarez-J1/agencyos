@@ -1,0 +1,140 @@
+.auth-shell {
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.08), transparent 34%),
+    var(--color-background);
+  display: grid;
+  gap: clamp(24px, 5vw, 56px);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  min-height: 100dvh;
+  padding: 48px;
+}
+
+.auth-copy-panel {
+  align-content: center;
+  display: grid;
+  gap: 20px;
+  max-width: 680px;
+}
+
+.brand-link {
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.auth-copy-panel h1 {
+  font-size: clamp(2.3rem, 5.6vw, 4.5rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.auth-copy-panel p,
+.auth-muted,
+.auth-switch {
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.auth-panel {
+  align-self: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 18px;
+  padding: clamp(24px, 4vw, 34px);
+}
+
+.auth-panel h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.auth-muted,
+.auth-switch {
+  margin: 0;
+}
+
+.form-alert {
+  background: var(--color-danger-surface);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-weight: 700;
+  padding: 12px;
+}
+
+.auth-form-modern {
+  display: grid;
+  gap: 16px;
+}
+
+.auth-form-modern label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.auth-form-modern input {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  min-height: 44px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.auth-form-modern input.input-error {
+  border-color: var(--color-danger);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.password-field {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.password-field button {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0 12px;
+}
+
+.primary-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (max-width: 860px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .auth-copy-panel {
+    align-content: end;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-shell {
+    padding: 18px;
+  }
+
+  .password-field {
+    grid-template-columns: 1fr;
+  }
+
+  .password-field button {
+    min-height: 40px;
+  }
+}
