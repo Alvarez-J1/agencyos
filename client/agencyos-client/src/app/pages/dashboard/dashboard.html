@@ -18,36 +18,43 @@
       <p>{{ errorMessage }}</p>
     </div>
   } @else {
-    <div class="metric-grid">
-      <article class="card metric-card">
+    <section class="dashboard-overview" aria-label="Workspace metrics">
+      <article class="card metric-card metric-card-primary">
         <span>Total Clients</span>
         <strong>{{ totalClients }}</strong>
       </article>
 
-      <article class="card metric-card">
-        <span>Active Projects</span>
-        <strong>{{ activeProjects }}</strong>
-      </article>
+      <div class="metric-grid">
+        <article class="card metric-card">
+          <span>Active Projects</span>
+          <strong>{{ activeProjects }}</strong>
+        </article>
 
-      <article class="card metric-card">
-        <span>Completed Projects</span>
-        <strong>{{ completedProjects }}</strong>
-      </article>
+        <article class="card metric-card">
+          <span>Completed Projects</span>
+          <strong>{{ completedProjects }}</strong>
+        </article>
 
-      <article class="card metric-card">
-        <span>Pending Tasks</span>
-        <strong>{{ pendingTasks }}</strong>
-      </article>
+        <article class="card metric-card">
+          <span>Pending Tasks</span>
+          <strong>{{ pendingTasks }}</strong>
+        </article>
 
-      <article class="card metric-card">
-        <span>Completed Tasks</span>
-        <strong>{{ completedTasks }}</strong>
-      </article>
-    </div>
+        <article class="card metric-card">
+          <span>Completed Tasks</span>
+          <strong>{{ completedTasks }}</strong>
+        </article>
+      </div>
+    </section>
 
     <div class="dashboard-grid">
-      <article class="card">
-        <h2>Recent Activity</h2>
+      <article class="card dashboard-card dashboard-card-wide">
+        <div class="panel-heading">
+          <div>
+            <span>Timeline</span>
+            <h2>Recent Activity</h2>
+          </div>
+        </div>
         <div class="activity-list">
           @for (activity of recentActivity; track activity) {
             <p>{{ activity }}</p>
@@ -55,8 +62,13 @@
         </div>
       </article>
 
-      <article class="card">
-        <h2>Upcoming Deadlines</h2>
+      <article class="card dashboard-card">
+        <div class="panel-heading">
+          <div>
+            <span>Schedule</span>
+            <h2>Upcoming Deadlines</h2>
+          </div>
+        </div>
         @if (upcomingDeadlines.length > 0) {
           <div class="deadline-list">
             @for (deadline of upcomingDeadlines; track deadline.title) {
@@ -71,8 +83,13 @@
         }
       </article>
 
-      <article class="card">
-        <h2>Project Status Overview</h2>
+      <article class="card dashboard-card">
+        <div class="panel-heading">
+          <div>
+            <span>Delivery</span>
+            <h2>Project Status Overview</h2>
+          </div>
+        </div>
         <div class="status-overview">
           @for (item of projectStatusOverview; track item.status) {
             <div>

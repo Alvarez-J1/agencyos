@@ -5,6 +5,7 @@ type NavItem = {
   label: string;
   route: string;
   exact: boolean;
+  icon: 'dashboard' | 'clients' | 'projects' | 'tasks' | 'settings';
 };
 
 @Component({
@@ -15,10 +16,10 @@ type NavItem = {
 })
 export class SidebarComponent {
   navItems: NavItem[] = [
-    { label: 'Dashboard', route: '/dashboard', exact: true },
-    { label: 'Clients', route: '/clients', exact: false },
-    { label: 'Projects', route: '/projects', exact: true },
-    { label: 'Tasks', route: '/tasks', exact: true },
-    { label: 'Settings', route: '/settings', exact: true }
+    { label: 'Dashboard', route: '/dashboard', exact: true, icon: 'dashboard' },
+    { label: 'Clients', route: '/clients', exact: false, icon: 'clients' },
+    { label: 'Projects', route: '/projects', exact: true, icon: 'projects' },
+    { label: 'Tasks', route: '/tasks', exact: true, icon: 'tasks' },
+    { label: 'Settings', route: '/settings', exact: true, icon: 'settings' }
   ];
 }

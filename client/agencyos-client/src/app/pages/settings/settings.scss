@@ -1,12 +1,12 @@
 .settings-grid {
   display: grid;
-  gap: 16px;
+  gap: 18px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .settings-section {
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
 .settings-section h2,
@@ -32,10 +32,22 @@
 
 .settings-fields input,
 .settings-fields select {
+  background: #fbfcfe;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   min-height: 44px;
-  padding: 10px 12px;
+  padding: 10px 13px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.settings-fields input:focus,
+.settings-fields select:focus {
+  background: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 88, 216, 0.08);
 }
 
 .preference-list,
@@ -52,7 +64,17 @@
   display: flex;
   justify-content: space-between;
   gap: 16px;
+  background: #fbfcfe;
   padding: 14px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.toggle-row:hover,
+.security-list div:hover {
+  background: #ffffff;
+  border-color: var(--color-border-strong);
 }
 
 .toggle-row span,
@@ -64,6 +86,7 @@
 .toggle-row input {
   height: 20px;
   width: 20px;
+  accent-color: var(--color-primary);
 }
 
 .security-list strong {
