@@ -9,7 +9,7 @@
   box-shadow: var(--shadow-card);
   display: grid;
   gap: 8px;
-  padding: 18px;
+  padding: 24px;
 }
 
 .clients-toolbar label {
@@ -17,11 +17,11 @@
 }
 
 .clients-toolbar input {
-  background: #fbfcfe;
+  background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   min-height: 44px;
-  padding: 10px 12px;
+  padding: 8px 16px;
   width: min(100%, 520px);
   transition:
     background 160ms ease,
@@ -30,9 +30,9 @@
 }
 
 .clients-toolbar input:focus {
-  background: #ffffff;
+  background: var(--color-surface-raised);
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(37, 88, 216, 0.08);
+  box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.12);
 }
 
 .clients-table {
@@ -49,7 +49,7 @@
   display: grid;
   gap: 16px;
   grid-template-columns: 1.3fr 1.3fr 0.8fr 0.8fr 1fr auto;
-  padding: 17px 20px;
+  padding: 16px 24px;
   transition:
     background 160ms ease,
     border-color 160ms ease;
@@ -60,7 +60,7 @@
 }
 
 .clients-row-header {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.03);
   color: var(--color-muted);
   font-size: 0.78rem;
   font-weight: 800;
@@ -69,7 +69,7 @@
 }
 
 .clients-row:not(.clients-row-header):hover {
-  background: #fbfcfe;
+  background: rgba(124, 156, 255, 0.06);
 }
 
 .client-email {
@@ -81,8 +81,8 @@
 }
 
 .status-paused {
-  background: #fff7ed;
-  color: #b45309;
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--color-warning);
 }
 
 .empty-state {
@@ -90,9 +90,9 @@
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-md);
   display: grid;
-  gap: 12px;
+  gap: 16px;
   justify-items: start;
-  padding: 36px;
+  padding: 32px;
 }
 
 .empty-state h2,
@@ -110,7 +110,7 @@
     border: 0;
     box-shadow: none;
     display: grid;
-    gap: 12px;
+    gap: 16px;
     overflow: visible;
   }
 
@@ -124,7 +124,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
-    padding: 18px;
+    padding: 24px;
   }
 
   .clients-row-header {

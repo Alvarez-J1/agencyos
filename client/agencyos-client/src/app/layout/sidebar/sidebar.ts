@@ -16,7 +16,7 @@ type NavItem = {
 })
 export class SidebarComponent {
   navItems: NavItem[] = [
-    { label: 'Dashboard', route: '/dashboard', exact: true, icon: 'dashboard' },
+    { label: 'Home', route: '/dashboard', exact: true, icon: 'dashboard' },
     { label: 'Clients', route: '/clients', exact: false, icon: 'clients' },
     { label: 'Projects', route: '/projects', exact: true, icon: 'projects' },
     { label: 'Tasks', route: '/tasks', exact: true, icon: 'tasks' },

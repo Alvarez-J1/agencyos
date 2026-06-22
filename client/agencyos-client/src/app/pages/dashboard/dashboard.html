@@ -1,104 +1,281 @@
-<section class="page">
-  <div class="page-header">
-    <div>
-      <p class="eyebrow">Overview</p>
-      <h1 class="page-title">Dashboard</h1>
-      <p class="page-description">A simple command center powered by the AgencyOS API.</p>
-    </div>
-  </div>
+<section class="page dashboard-page">
+  <section class="dashboard-section overview-section" aria-labelledby="overview-heading">
+    <header class="dashboard-hero">
+      <div class="hero-copy">
+        <p class="eyebrow hero-kicker">Overview</p>
+        <h1 id="overview-heading">Good morning, Avery</h1>
+        <p>Here's what's happening in your workspace today.</p>
 
-  @if (isLoading) {
-    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
-      <h2 class="loading-indicator">Loading dashboard</h2>
-      <p>Fetching clients, projects, and tasks.</p>
-    </div>
-  } @else if (errorMessage) {
-    <div class="state-panel state-panel-error" role="alert">
-      <h2>Dashboard unavailable</h2>
-      <p>{{ errorMessage }}</p>
-    </div>
-  } @else {
-    <section class="dashboard-overview" aria-label="Workspace metrics">
-      <article class="card metric-card metric-card-primary">
-        <span>Total Clients</span>
-        <strong>{{ totalClients }}</strong>
-      </article>
-
-      <div class="metric-grid">
-        <article class="card metric-card">
-          <span>Active Projects</span>
-          <strong>{{ activeProjects }}</strong>
-        </article>
-
-        <article class="card metric-card">
-          <span>Completed Projects</span>
-          <strong>{{ completedProjects }}</strong>
-        </article>
-
-        <article class="card metric-card">
-          <span>Pending Tasks</span>
-          <strong>{{ pendingTasks }}</strong>
-        </article>
-
-        <article class="card metric-card">
-          <span>Completed Tasks</span>
-          <strong>{{ completedTasks }}</strong>
-        </article>
-      </div>
-    </section>
-
-    <div class="dashboard-grid">
-      <article class="card dashboard-card dashboard-card-wide">
-        <div class="panel-heading">
-          <div>
-            <span>Timeline</span>
-            <h2>Recent Activity</h2>
-          </div>
-        </div>
-        <div class="activity-list">
-          @for (activity of recentActivity; track activity) {
-            <p>{{ activity }}</p>
+        <div class="hero-summary" aria-label="Workspace summary">
+          @if (!isLoading && !errorMessage) {
+            <span><strong>{{ openWorkItems }}</strong> open work items</span>
+            <span><strong>{{ totalClients }}</strong> client accounts</span>
+            <span><strong>{{ taskCompletionRate }}%</strong> task completion</span>
+          } @else {
+            <span>Workspace data is syncing</span>
           }
         </div>
-      </article>
+      </div>
 
-      <article class="card dashboard-card">
-        <div class="panel-heading">
-          <div>
-            <span>Schedule</span>
-            <h2>Upcoming Deadlines</h2>
+      <aside class="hero-health" aria-label="Workspace health">
+        <span>Workspace health</span>
+        @if (!isLoading && !errorMessage) {
+          <strong>{{ taskCompletionRate }}%</strong>
+          <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
+          <div class="health-meter" aria-hidden="true">
+            <span [style.width.%]="taskCompletionRate"></span>
           </div>
-        </div>
-        @if (upcomingDeadlines.length > 0) {
-          <div class="deadline-list">
-            @for (deadline of upcomingDeadlines; track deadline.title) {
-              <div>
-                <strong>{{ deadline.title }}</strong>
-                <span>{{ deadline.label }} due {{ deadline.dueDate }}</span>
+        } @else {
+          <strong>Live</strong>
+          <p>Preparing your dashboard metrics</p>
+          <div class="health-meter health-meter-loading" aria-hidden="true">
+            <span></span>
+          </div>
+        }
+      </aside>
+    </header>
+
+    @if (isLoading) {
+      <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+        <h2 class="loading-indicator">Loading dashboard</h2>
+        <p>Fetching clients, projects, and tasks.</p>
+      </div>
+    } @else if (errorMessage) {
+      <div class="state-panel state-panel-error" role="alert">
+        <h2>Home unavailable</h2>
+        <p>{{ errorMessage }}</p>
+      </div>
+    } @else {
+      <section class="metric-grid" aria-label="Workspace metrics">
+        <article class="metric-card metric-card-primary">
+          <div class="metric-card-top">
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7.5 11a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm9-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM3 19v-.75C3 15.35 5.02 13 7.5 13s4.5 2.35 4.5 5.25V19H3Zm11 0v-.75c0-1.45-.45-2.78-1.2-3.85.85-.88 2.05-1.4 3.2-1.4 2.2 0 4 2.02 4 4.5V19h-6Z" />
+              </svg>
+            </span>
+            <span class="metric-trend trend-positive">+12%</span>
+          </div>
+          <div class="metric-copy">
+            <span>Total clients</span>
+            <strong>{{ totalClients }}</strong>
+          </div>
+          <p>{{ totalClients }} accounts tracked across the workspace.</p>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Zm3 1.25v2h10v-2H7Zm0 4.5v4h4.25v-4H7Zm6.75 0v4H17v-4h-3.25Z" />
+              </svg>
+            </span>
+            <span class="metric-trend trend-neutral">On pace</span>
+          </div>
+          <div class="metric-copy">
+            <span>Active projects</span>
+            <strong>{{ activeProjects }}</strong>
+          </div>
+          <p>{{ activeProjects }} projects currently moving through delivery.</p>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1ZM4 5h16v2H4V5Zm0 14h16v2H4v-2Z" />
+              </svg>
+            </span>
+            <span class="metric-trend trend-positive">+4 done</span>
+          </div>
+          <div class="metric-copy">
+            <span>Completed projects</span>
+            <strong>{{ completedProjects }}</strong>
+          </div>
+          <p>Finished work ready for reporting and follow-up.</p>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 4h14v16H5V4Zm3 4v2h8V8H8Zm0 4v2h5v-2H8Zm0 4v2h7v-2H8Z" />
+              </svg>
+            </span>
+            <span class="metric-trend trend-warning">Focus</span>
+          </div>
+          <div class="metric-copy">
+            <span>Pending tasks</span>
+            <strong>{{ pendingTasks }}</strong>
+          </div>
+          <p>{{ pendingTasks }} tasks still need attention this week.</p>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-card-top">
+            <span class="metric-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm-.9 12.3 5.35-5.35-1.4-1.4-3.95 3.95-2.15-2.15-1.4 1.4 3.55 3.55Z" />
+              </svg>
+            </span>
+            <span class="metric-trend trend-positive">{{ taskCompletionRate }}%</span>
+          </div>
+          <div class="metric-copy">
+            <span>Completed tasks</span>
+            <strong>{{ completedTasks }}</strong>
+          </div>
+          <p>A clear signal of delivery momentum.</p>
+        </article>
+      </section>
+    }
+  </section>
+
+  @if (!isLoading && !errorMessage) {
+    <section class="dashboard-section work-section" aria-labelledby="work-heading">
+      <div class="section-heading">
+        <span>Main workspace</span>
+        <h2 id="work-heading">Core Operations</h2>
+      </div>
+
+      <article class="dashboard-panel work-panel">
+        <div class="work-column activity-column">
+          <div class="panel-heading">
+            <div>
+              <span>Timeline</span>
+              <h3>Recent Activity</h3>
+            </div>
+          </div>
+          <div class="activity-feed">
+            @for (activity of recentActivity; track activity.title) {
+              <div
+                class="activity-item"
+                [class.activity-blue]="activity.tone === 'blue'"
+                [class.activity-green]="activity.tone === 'green'"
+                [class.activity-amber]="activity.tone === 'amber'"
+              >
+                <span class="activity-icon" aria-hidden="true">
+                  @switch (activity.icon) {
+                    @case ('approval') {
+                      <svg viewBox="0 0 24 24">
+                        <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+                      </svg>
+                    }
+                    @case ('client') {
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9c0-3.3 3.13-6 7-6s7 2.7 7 6H5Z" />
+                      </svg>
+                    }
+                    @case ('report') {
+                      <svg viewBox="0 0 24 24">
+                        <path d="M5 3h11l3 3v15H5V3Zm10 1.8V7h2.2L15 4.8ZM8 10v2h8v-2H8Zm0 4v2h8v-2H8Z" />
+                      </svg>
+                    }
+                  }
+                </span>
+                <div class="activity-content">
+                  <div class="activity-title-row">
+                    <strong>{{ activity.title }}</strong>
+                    <time>{{ activity.timestamp }}</time>
+                  </div>
+                  <p>{{ activity.description }}</p>
+                </div>
               </div>
             }
           </div>
-        } @else {
-          <p>No upcoming deadlines.</p>
-        }
-      </article>
-
-      <article class="card dashboard-card">
-        <div class="panel-heading">
-          <div>
-            <span>Delivery</span>
-            <h2>Project Status Overview</h2>
-          </div>
         </div>
-        <div class="status-overview">
-          @for (item of projectStatusOverview; track item.status) {
+
+        <div class="work-column deadlines-column">
+          <div class="panel-heading">
             <div>
-              <span>{{ item.status }}</span>
-              <strong>{{ item.count }}</strong>
+              <span>Schedule</span>
+              <h3>Upcoming Deadlines</h3>
+            </div>
+          </div>
+          @if (upcomingDeadlines.length > 0) {
+            <div class="deadline-list">
+              @for (deadline of upcomingDeadlines; track deadline.title) {
+                <button
+                  class="deadline-item"
+                  type="button"
+                  [class.deadline-due-soon]="deadline.urgency === 'due-soon'"
+                  [class.deadline-today]="deadline.urgencyLabel === 'Due today'"
+                  [class.deadline-upcoming]="deadline.urgency === 'upcoming'"
+                  [class.deadline-scheduled]="deadline.urgency === 'scheduled'"
+                >
+                  <span class="deadline-main">
+                    <span class="deadline-dot" aria-hidden="true"></span>
+                    <span class="deadline-copy">
+                      <strong>{{ deadline.title }}</strong>
+                      <span>{{ deadline.label }} due {{ deadline.dueDate }}</span>
+                    </span>
+                  </span>
+                  <span class="urgency-pill">{{ deadline.urgencyLabel }}</span>
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="empty-panel">
+              <strong>No upcoming deadlines</strong>
+              <p>Your workspace is clear for now.</p>
             </div>
           }
         </div>
       </article>
-    </div>
+    </section>
+
+    <section class="dashboard-section insights-section" aria-labelledby="insights-heading">
+      <div class="section-heading">
+        <span>Reporting</span>
+        <h2 id="insights-heading">Insights</h2>
+      </div>
+
+      <article class="dashboard-panel status-panel">
+        <div class="status-copy">
+          <div class="panel-heading">
+            <div>
+              <span>Delivery</span>
+              <h3>Project Status Overview</h3>
+            </div>
+          </div>
+
+          <div class="status-meter" aria-label="Project status distribution">
+            @if (projectStatusTotal > 0) {
+              @for (item of projectStatusOverview; track item.status) {
+                <span
+                  class="status-segment"
+                  [class.status-planning]="item.status === 'Planning'"
+                  [class.status-progress]="item.status === 'In Progress'"
+                  [class.status-review]="item.status === 'Review'"
+                  [class.status-completed]="item.status === 'Completed'"
+                  [style.width.%]="(item.count / projectStatusTotal) * 100"
+                  [attr.aria-label]="item.status + ': ' + item.count"
+                ></span>
+              }
+            } @else {
+              <span class="status-segment status-empty"></span>
+            }
+          </div>
+        </div>
+
+        <div class="status-stats">
+          @for (item of projectStatusOverview; track item.status) {
+            <div class="status-stat">
+              <span
+                class="status-dot"
+                [class.status-planning]="item.status === 'Planning'"
+                [class.status-progress]="item.status === 'In Progress'"
+                [class.status-review]="item.status === 'Review'"
+                [class.status-completed]="item.status === 'Completed'"
+                aria-hidden="true"
+              ></span>
+              <div>
+                <strong>{{ item.count }}</strong>
+                <span>{{ item.status }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+    </section>
   }
 </section>

@@ -1,13 +1,13 @@
 .topbar {
   align-items: center;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(10, 15, 26, 0.78);
   border-bottom: 1px solid var(--color-border);
   backdrop-filter: blur(14px);
   display: flex;
-  gap: 20px;
+  gap: 24px;
   justify-content: space-between;
   min-height: 76px;
-  padding: 16px clamp(18px, 3vw, 32px);
+  padding: 16px var(--space-page);
   position: sticky;
   top: 0;
   z-index: 5;
@@ -21,6 +21,7 @@
 }
 
 .topbar strong {
+  color: var(--color-text);
   font-size: 1rem;
   letter-spacing: -0.015em;
 }
@@ -28,7 +29,7 @@
 .topbar-actions {
   align-items: center;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   min-width: 0;
 }
 
@@ -40,9 +41,10 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  color: var(--color-text);
   min-height: 40px;
   width: min(32vw, 320px);
-  padding: 9px 14px;
+  padding: 8px 16px;
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
@@ -50,7 +52,7 @@
 
 .topbar-actions input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(37, 88, 216, 0.08);
+  box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.12);
 }
 
 .account-link {
@@ -58,7 +60,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: var(--shadow-soft);
   display: inline-flex;
   font-weight: 800;
   height: 40px;
@@ -70,9 +72,16 @@
     transform 160ms ease;
 }
 
+.account-link img {
+  display: block;
+  height: 32px;
+  object-fit: contain;
+  width: 32px;
+}
+
 .account-link:hover {
   border-color: var(--color-border-strong);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0 24px rgba(124, 156, 255, 0.16);
   transform: translateY(-1px);
 }
 
@@ -80,7 +89,7 @@
   .topbar {
     align-items: stretch;
     flex-direction: column;
-    padding: 16px 20px;
+    padding: 16px 24px;
   }
 
   .topbar-actions {

@@ -13,7 +13,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:4200' }));
+const corsOrigin = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN
+  : (origin, callback) => {
+      const isLocalhost = !origin || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+      callback(isLocalhost ? null : new Error('Not allowed by CORS'), isLocalhost);
+    };
+
+app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
