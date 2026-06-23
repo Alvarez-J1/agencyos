@@ -46,7 +46,13 @@
   </nav>
 
   <div class="sidebar-footer">
-    <p>Freelance workspace</p>
-    <a routerLink="/login">Account access</a>
+    <button class="signout-button" type="button" (click)="signOut()">
+      <span class="nav-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 4h8v2H7v12h6v2H5V4Zm11.6 4.6 1.4-1.4 4.8 4.8-4.8 4.8-1.4-1.4 2.4-2.4H11v-2h8l-2.4-2.4Z" />
+        </svg>
+      </span>
+      Sign Out
+    </button>
   </div>
 </aside>

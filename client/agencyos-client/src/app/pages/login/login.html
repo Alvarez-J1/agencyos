@@ -1,14 +1,70 @@
-<section class="auth-shell">
-  <div class="auth-copy-panel">
-    <a class="brand-link" routerLink="/dashboard">AgencyOS</a>
-    <h1>Run client work with calm control.</h1>
-    <p>Manage clients, projects, and tasks from one focused freelance operations dashboard.</p>
+<section class="login-shell">
+  <div class="login-copy-panel">
+    <div class="brand-link-logo" aria-label="AgencyOS">
+      <img src="agencyos-logo.png" alt="AgencyOS" />
+    </div>
+
+    <div class="login-hero-copy">
+      <h1>Everything your agency needs. One focused workspace.</h1>
+      <p>Manage clients, track projects, organize tasks, and keep delivery moving from a single AgencyOS command center.</p>
+
+      <ul class="feature-list" aria-label="AgencyOS features">
+        <li>
+          <span class="feature-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+            </svg>
+          </span>
+          Manage clients
+        </li>
+        <li>
+          <span class="feature-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+            </svg>
+          </span>
+          Track projects
+        </li>
+        <li>
+          <span class="feature-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+            </svg>
+          </span>
+          Organize tasks
+        </li>
+        <li>
+          <span class="feature-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+            </svg>
+          </span>
+          Track project deadlines
+        </li>
+        <li>
+          <span class="feature-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
+            </svg>
+          </span>
+          Monitor delivery status
+        </li>
+      </ul>
+
+      <p class="trust-statement">Built for freelancers and small agencies that need a focused delivery workspace.</p>
+    </div>
+
+    <div class="product-preview" aria-hidden="true">
+      <img src="agencyos-dashboard-preview.png" alt="" />
+    </div>
   </div>
 
-  <div class="auth-panel">
-    <p class="eyebrow">Welcome back</p>
-    <h2>Log in</h2>
-    <p class="auth-muted">Log in with your AgencyOS account to access protected workspace data.</p>
+  <div class="login-card">
+    <div class="login-card-header">
+      <p class="auth-card-brand">AgencyOS</p>
+      <h2>Welcome back</h2>
+      <p class="auth-muted">Sign in to continue managing clients, projects, and tasks.</p>
+    </div>
 
     @if (errorMessage) {
       <div class="form-alert" role="alert">{{ errorMessage }}</div>
@@ -36,7 +92,7 @@
           <input
             name="password"
             [type]="showPassword ? 'text' : 'password'"
-            placeholder="At least 8 characters"
+            placeholder="Enter your password"
             [(ngModel)]="form.password"
             [class.input-error]="passwordInvalid"
             [attr.aria-invalid]="passwordInvalid"
@@ -51,9 +107,21 @@
       </label>
 
       <button class="primary-button" type="submit" [disabled]="isLoading" [attr.aria-busy]="isLoading">
-        {{ isLoading ? 'Checking...' : 'Log in' }}
+        {{ isLoading ? 'Checking...' : 'Sign in' }}
       </button>
     </form>
+
+    <section class="demo-account" aria-label="Demo account credentials">
+      <p>Demo Account</p>
+      <div>
+        <span>Email</span>
+        <strong>demo&#64;agencyos.com</strong>
+      </div>
+      <div>
+        <span>Password</span>
+        <strong>password123</strong>
+      </div>
+    </section>
 
     <p class="auth-switch">
       New to AgencyOS?

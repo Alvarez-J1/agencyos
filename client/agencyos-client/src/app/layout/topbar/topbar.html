@@ -1,16 +1,19 @@
 <header class="topbar">
   <div>
-    <p class="topbar-label">Portfolio SaaS</p>
+    <p class="topbar-label">Workspace</p>
     <strong>Agency operations home</strong>
   </div>
 
   <div class="topbar-actions">
-    <label class="topbar-search">
-      <span class="sr-only">Search workspace</span>
-      <input placeholder="Search workspace" type="search" />
-    </label>
-    <a class="account-link" routerLink="/settings" aria-label="Open settings">
-      <img src="agencyos-icon.png" alt="" />
+    <a class="account-link" routerLink="/settings" aria-label="Open account settings">
+      <span class="account-avatar" aria-hidden="true">{{ userInitials }}</span>
+      <span class="account-copy">
+        <strong>{{ displayName }}</strong>
+        <span>{{ displayEmail }}</span>
+      </span>
+      <svg class="account-chevron" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m7.4 8.6 4.6 4.6 4.6-4.6L18 10l-6 6-6-6 1.4-1.4Z" />
+      </svg>
     </a>
   </div>
 </header>

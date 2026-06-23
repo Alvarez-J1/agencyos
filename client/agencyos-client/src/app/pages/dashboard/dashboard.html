@@ -3,18 +3,8 @@
     <header class="dashboard-hero">
       <div class="hero-copy">
         <p class="eyebrow hero-kicker">Overview</p>
-        <h1 id="overview-heading">Good morning, Avery</h1>
+        <h1 id="overview-heading">Welcome back, {{ welcomeName }}</h1>
         <p>Here's what's happening in your workspace today.</p>
-
-        <div class="hero-summary" aria-label="Workspace summary">
-          @if (!isLoading && !errorMessage) {
-            <span><strong>{{ openWorkItems }}</strong> open work items</span>
-            <span><strong>{{ totalClients }}</strong> client accounts</span>
-            <span><strong>{{ taskCompletionRate }}%</strong> task completion</span>
-          } @else {
-            <span>Workspace data is syncing</span>
-          }
-        </div>
       </div>
 
       <aside class="hero-health" aria-label="Workspace health">
@@ -223,59 +213,5 @@
       </article>
     </section>
 
-    <section class="dashboard-section insights-section" aria-labelledby="insights-heading">
-      <div class="section-heading">
-        <span>Reporting</span>
-        <h2 id="insights-heading">Insights</h2>
-      </div>
-
-      <article class="dashboard-panel status-panel">
-        <div class="status-copy">
-          <div class="panel-heading">
-            <div>
-              <span>Delivery</span>
-              <h3>Project Status Overview</h3>
-            </div>
-          </div>
-
-          <div class="status-meter" aria-label="Project status distribution">
-            @if (projectStatusTotal > 0) {
-              @for (item of projectStatusOverview; track item.status) {
-                <span
-                  class="status-segment"
-                  [class.status-planning]="item.status === 'Planning'"
-                  [class.status-progress]="item.status === 'In Progress'"
-                  [class.status-review]="item.status === 'Review'"
-                  [class.status-completed]="item.status === 'Completed'"
-                  [style.width.%]="(item.count / projectStatusTotal) * 100"
-                  [attr.aria-label]="item.status + ': ' + item.count"
-                ></span>
-              }
-            } @else {
-              <span class="status-segment status-empty"></span>
-            }
-          </div>
-        </div>
-
-        <div class="status-stats">
-          @for (item of projectStatusOverview; track item.status) {
-            <div class="status-stat">
-              <span
-                class="status-dot"
-                [class.status-planning]="item.status === 'Planning'"
-                [class.status-progress]="item.status === 'In Progress'"
-                [class.status-review]="item.status === 'Review'"
-                [class.status-completed]="item.status === 'Completed'"
-                aria-hidden="true"
-              ></span>
-              <div>
-                <strong>{{ item.count }}</strong>
-                <span>{{ item.status }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </article>
-    </section>
   }
 </section>

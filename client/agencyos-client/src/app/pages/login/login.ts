@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: '../auth.scss'
+  styleUrls: ['../auth.scss', './login.scss']
 })
 export class LoginComponent {
   constructor(

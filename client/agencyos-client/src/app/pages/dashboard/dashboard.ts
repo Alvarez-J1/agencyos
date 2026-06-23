@@ -5,6 +5,7 @@ import { Client } from '../../models/client.model';
 import { Project, ProjectStatus } from '../../models/project.model';
 import { Task } from '../../models/task.model';
 import { ClientService } from '../../services/client.service';
+import { AuthService } from '../../services/auth.service';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 
@@ -34,15 +35,19 @@ interface DashboardDeadline {
   styleUrl: './dashboard.scss'
 })
 export class DashboardComponent implements OnInit {
+  private readonly authService = inject(AuthService);
   private readonly clientService = inject(ClientService);
   private readonly projectService = inject(ProjectService);
   private readonly taskService = inject(TaskService);
+  private readonly currentUser = this.authService.getCurrentUser();
 
   clients: Client[] = [];
   projects: Project[] = [];
   tasks: Task[] = [];
   isLoading = true;
   errorMessage = '';
+
+  readonly welcomeName = this.currentUser?.name.trim().split(/\s+/)[0] ?? 'there';
 
   readonly recentActivity: ActivityItem[] = [
     {
@@ -109,10 +114,6 @@ export class DashboardComponent implements OnInit {
 
   get completedTasks(): number {
     return this.tasks.filter((task) => task.status === 'Completed').length;
-  }
-
-  get openWorkItems(): number {
-    return this.activeProjects + this.pendingTasks;
   }
 
   get taskCompletionRate(): number {

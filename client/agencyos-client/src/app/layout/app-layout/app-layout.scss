@@ -6,6 +6,7 @@
 }
 
 .workspace {
+  background: var(--color-surface-muted);
   display: grid;
   grid-template-rows: auto 1fr;
   min-width: 0;
