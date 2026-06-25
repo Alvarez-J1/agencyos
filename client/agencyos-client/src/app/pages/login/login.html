@@ -5,8 +5,11 @@
     </div>
 
     <div class="login-hero-copy">
-      <h1>Everything your agency needs. One focused workspace.</h1>
-      <p>Manage clients, track projects, organize tasks, and keep delivery moving from a single AgencyOS command center.</p>
+      <h1>
+        <span>Run your agency</span>
+        <span>from one workspace.</span>
+      </h1>
+      <p>Manage clients, track projects, organize tasks, and stay on top of deadlines from a single workspace.</p>
 
       <ul class="feature-list" aria-label="AgencyOS features">
         <li>
@@ -41,21 +44,16 @@
           </span>
           Track project deadlines
         </li>
-        <li>
-          <span class="feature-check" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1Z" />
-            </svg>
-          </span>
-          Monitor delivery status
-        </li>
       </ul>
 
-      <p class="trust-statement">Built for freelancers and small agencies that need a focused delivery workspace.</p>
+      <p class="trust-statement">Built for freelancers and agencies managing clients, projects, and deadlines.</p>
     </div>
 
     <div class="product-preview" aria-hidden="true">
-      <img src="agencyos-dashboard-preview.png" alt="" />
+      <picture>
+        <source media="(max-width: 1023px)" srcset="agencyos-dashboard-preview-mobile.png" />
+        <img src="agencyos-dashboard-preview.png" alt="" />
+      </picture>
     </div>
   </div>
 
@@ -92,7 +90,7 @@
           <input
             name="password"
             [type]="showPassword ? 'text' : 'password'"
-            placeholder="Enter your password"
+            placeholder="Enter your pass..."
             [(ngModel)]="form.password"
             [class.input-error]="passwordInvalid"
             [attr.aria-invalid]="passwordInvalid"

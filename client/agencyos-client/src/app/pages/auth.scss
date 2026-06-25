@@ -59,9 +59,10 @@
 }
 
 .password-field {
+  align-items: center;
   display: grid;
   gap: 8px;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) max-content;
 }
 
 .password-field button {
@@ -71,10 +72,12 @@
   color: var(--color-text);
   cursor: pointer;
   font-weight: 800;
-  padding: 0 16px;
+  min-height: 44px;
+  padding: 0 14px;
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease;
+  white-space: nowrap;
 }
 
 .password-field button:hover {
@@ -88,11 +91,7 @@
 }
 
 @media (max-width: 520px) {
-  .password-field {
-    grid-template-columns: 1fr;
-  }
-
   .password-field button {
-    min-height: 40px;
+    padding-inline: 12px;
   }
 }

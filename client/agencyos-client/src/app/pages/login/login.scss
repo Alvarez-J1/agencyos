@@ -1,30 +1,28 @@
 .login-shell {
-  align-items: center;
+  align-items: start;
   background:
     radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.045), transparent 32rem),
     radial-gradient(circle at 82% 10%, rgba(255, 255, 255, 0.028), transparent 24rem),
     var(--color-background);
   display: grid;
-  gap: 32px;
+  gap: 28px;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
   min-height: 100dvh;
   overflow: hidden;
-  padding: 32px;
+  padding: 48px clamp(48px, 8vw, 144px) 40px;
 }
 
 .login-copy-panel {
-  align-content: center;
+  align-content: start;
+  align-self: start;
   display: grid;
   gap: 24px;
-  max-width: none;
   min-width: 0;
-  padding-top: 32px;
 }
 
 .brand-link-logo {
   align-items: center;
   display: inline-flex;
-  width: fit-content;
 }
 
 .brand-link-logo img {
@@ -32,7 +30,6 @@
   height: 48px;
   max-width: 224px;
   object-fit: contain;
-  object-position: left center;
 }
 
 .login-hero-copy {
@@ -42,19 +39,33 @@
 
 .login-copy-panel h1 {
   font-size: clamp(2.5rem, 5.2vw, 4.5rem);
-  max-width: 840px;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  margin: 0;
+}
+
+.login-copy-panel h1 span {
+  display: block;
+}
+
+@media (min-width: 1440px) {
+  .login-copy-panel h1 span {
+    white-space: nowrap;
+  }
 }
 
 .login-hero-copy p {
   font-size: 1.02rem;
+  line-height: 1.6;
+  margin: 0;
   max-width: 720px;
 }
 
 .login-hero-copy .trust-statement {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.48);
   font-size: 0.92rem;
-  font-weight: 650;
-  margin-top: -4px;
+  font-weight: 600;
+  margin: -4px 0 0;
 }
 
 .feature-list {
@@ -102,38 +113,20 @@
   border-radius: 12px;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.045) inset,
-    0 18px 52px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(124, 156, 255, 0.026);
-  height: auto;
-  margin-top: 24px;
-  max-width: 800px;
+    0 18px 52px rgba(0, 0, 0, 0.28);
   overflow: hidden;
-  pointer-events: none;
-  position: relative;
-  width: min(100%, 800px);
-}
-
-.product-preview::after {
-  background:
-    linear-gradient(180deg, rgba(10, 11, 15, 0.1) 0%, transparent 16%, transparent 68%, rgba(10, 11, 15, 0.34) 100%),
-    linear-gradient(90deg, rgba(10, 11, 15, 0.08) 0%, transparent 12%, transparent 82%, rgba(10, 11, 15, 0.28) 100%);
-  content: "";
-  inset: 0;
-  position: absolute;
+  width: min(100%, 880px);
 }
 
 .product-preview img {
   display: block;
-  filter: brightness(1.18) contrast(1.12) saturate(1.04);
-  height: auto;
-  object-fit: contain;
-  object-position: left top;
+  filter: brightness(1.16) contrast(1.1) saturate(1.04);
   opacity: 0.9;
   width: 100%;
 }
 
 .login-card {
-  align-self: center;
+  align-self: start;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -142,6 +135,7 @@
   gap: 24px;
   isolation: isolate;
   justify-self: end;
+  margin-top: 56px;
   padding: 32px;
   position: relative;
   width: min(100%, 420px);
@@ -175,6 +169,8 @@
 
 .login-card h2 {
   font-size: 2rem;
+  letter-spacing: -0.035em;
+  margin: 0;
 }
 
 .login-card .auth-muted,
@@ -229,26 +225,52 @@
   font-weight: 800;
 }
 
+@media (max-width: 1023px) {
+  .login-shell {
+    background: transparent;
+  }
+}
+
 @media (max-width: 860px) {
   .login-shell {
     grid-template-columns: 1fr;
     overflow: visible;
-    padding: 24px;
+    padding: 24px 24px 48px;
   }
 
   .login-copy-panel {
-    align-content: end;
+    width: 100%;
+  }
+
+  .login-card {
+    margin-top: 0;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .product-preview {
-    max-width: none;
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 767px) {
+  .login-copy-panel {
+    display: contents;
+  }
+
+  .product-preview {
+    order: 1;
   }
 }
 
 @media (max-width: 520px) {
   .login-shell {
     gap: 24px;
-    padding: 16px;
+  }
+
+  .login-copy-panel h1 {
+    width: 100%;
   }
 
   .brand-link-logo img {
