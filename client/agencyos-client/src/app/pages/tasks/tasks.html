@@ -5,7 +5,172 @@
       <h1 class="page-title">Tasks</h1>
       <p class="page-description">Search, filter, and complete task rows from the AgencyOS API.</p>
     </div>
+
+    <button class="primary-button" type="button" (click)="openCreateModal()">New task</button>
   </div>
+
+  @if (showCreateModal) {
+    <div class="modal-backdrop" role="presentation" (click)="closeCreateModal()">
+      <section
+        class="create-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-task-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">New record</p>
+            <h2 id="new-task-title">New task</h2>
+            <p>Create a task in the AgencyOS backend.</p>
+          </div>
+
+          <button class="icon-button" type="button" aria-label="Close new task form" (click)="closeCreateModal()">
+            x
+          </button>
+        </div>
+
+        @if (formErrorMessage) {
+          <p class="form-error" role="alert">{{ formErrorMessage }}</p>
+        }
+
+        <form class="create-form" (ngSubmit)="createTask()">
+          <label>
+            Task title
+            <input type="text" name="task-title" [(ngModel)]="newTask.title" />
+          </label>
+
+          <label>
+            Project
+            <input type="text" name="task-project" [(ngModel)]="newTask.project" />
+          </label>
+
+          <label>
+            Assignee
+            <input type="text" name="task-assignee" [(ngModel)]="newTask.assignee" />
+          </label>
+
+          <label>
+            Status
+            <select name="task-status" [(ngModel)]="newTask.status">
+              @for (status of createStatusOptions; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Priority
+            <select name="task-priority" [(ngModel)]="newTask.priority">
+              @for (priority of createPriorityOptions; track priority) {
+                <option [value]="priority">{{ priority }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Due date
+            <input type="date" name="task-due-date" [(ngModel)]="newTask.dueDate" />
+          </label>
+
+          <label class="full-field">
+            Description/notes
+            <textarea name="task-notes" rows="4" [(ngModel)]="newTask.notes"></textarea>
+          </label>
+
+          <div class="modal-actions">
+            <button class="secondary-button" type="button" (click)="closeCreateModal()">Cancel</button>
+            <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+              {{ isSaving ? 'Creating...' : 'Create task' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  }
+
+  @if (showEditModal && editTask) {
+    <div class="modal-backdrop" role="presentation" (click)="closeEditModal()">
+      <section
+        class="create-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-task-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Edit record</p>
+            <h2 id="edit-task-title">Edit task</h2>
+            <p>Update this task's details, priority, status, and due date.</p>
+          </div>
+
+          <button class="icon-button" type="button" aria-label="Close edit task form" (click)="closeEditModal()">
+            x
+          </button>
+        </div>
+
+        @if (formErrorMessage) {
+          <p class="form-error" role="alert">{{ formErrorMessage }}</p>
+        }
+
+        <form class="create-form" (ngSubmit)="saveTask()">
+          <label>
+            Task title
+            <input type="text" name="edit-task-title-field" [(ngModel)]="editTask.title" />
+          </label>
+
+          <label>
+            Project
+            <input type="text" name="edit-task-project" [(ngModel)]="editTask.project" />
+          </label>
+
+          <label>
+            Assignee
+            <input type="text" name="edit-task-assignee" [(ngModel)]="editTask.assignee" />
+          </label>
+
+          <label>
+            Status
+            <select name="edit-task-status" [(ngModel)]="editTask.status">
+              @for (status of createStatusOptions; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Priority
+            <select name="edit-task-priority" [(ngModel)]="editTask.priority">
+              @for (priority of createPriorityOptions; track priority) {
+                <option [value]="priority">{{ priority }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Due date
+            <input type="date" name="edit-task-due-date" [(ngModel)]="editTask.dueDate" />
+          </label>
+
+          <label class="full-field">
+            Description/notes
+            <textarea name="edit-task-notes" rows="4" [(ngModel)]="editTask.notes"></textarea>
+          </label>
+
+          <div class="modal-actions task-edit-actions">
+            <button class="danger-button" type="button" [disabled]="isDeleting" [attr.aria-busy]="isDeleting" (click)="deleteTask()">
+              {{ isDeleting ? 'Deleting...' : 'Delete task' }}
+            </button>
+            <button class="secondary-button" type="button" (click)="closeEditModal()">Cancel</button>
+            <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+              {{ isSaving ? 'Saving...' : 'Save task' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  }
 
   <div class="tasks-toolbar">
     <label>
@@ -84,22 +249,29 @@
             {{ task.status }}
           </span>
           <span>{{ task.dueDate }}</span>
-          <button
-            class="complete-button"
-            type="button"
-            [disabled]="task.status === 'Completed'"
-            [attr.aria-label]="'Mark ' + task.title + ' complete'"
-            (click)="markComplete(task.id)"
-          >
-            Mark Complete
-          </button>
+          <div class="task-actions">
+            <button class="edit-button" type="button" [attr.aria-label]="'Edit ' + task.title" (click)="openEditModal(task)">
+              Edit
+            </button>
+            <button
+              class="complete-button"
+              type="button"
+              [disabled]="task.status === 'Completed' || updatingTaskId === task.id"
+              [attr.aria-label]="'Mark ' + task.title + ' complete'"
+              [attr.aria-busy]="updatingTaskId === task.id"
+              (click)="markComplete(task.id)"
+            >
+              {{ updatingTaskId === task.id ? 'Saving...' : 'Mark Complete' }}
+            </button>
+          </div>
         </div>
       }
     </div>
   } @else {
     <div class="state-panel">
       <h2>No tasks found</h2>
-      <p>Try a different search term, status, or priority filter.</p>
+      <p>Try a different search term, status, or priority filter, or create a new task.</p>
+      <button class="primary-button" type="button" (click)="openCreateModal()">New task</button>
     </div>
   }
 </section>

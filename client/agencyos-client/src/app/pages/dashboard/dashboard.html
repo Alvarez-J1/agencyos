@@ -35,15 +35,19 @@
         <h2>Home unavailable</h2>
         <p>{{ errorMessage }}</p>
       </div>
+    } @else if (hasNoClients) {
+      <div class="empty-workspace-card">
+        <div>
+          <p class="eyebrow">Get started</p>
+          <h2>No clients yet</h2>
+          <p>Add your first client to start managing projects, tasks, and workspace activity.</p>
+        </div>
+        <a class="primary-button" routerLink="/clients" [queryParams]="{ newClient: true }">Add Client</a>
+      </div>
     } @else {
       <section class="metric-grid" aria-label="Workspace metrics">
         <article class="metric-card metric-card-primary">
           <div class="metric-card-top">
-            <span class="metric-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M7.5 11a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm9-1a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM3 19v-.75C3 15.35 5.02 13 7.5 13s4.5 2.35 4.5 5.25V19H3Zm11 0v-.75c0-1.45-.45-2.78-1.2-3.85.85-.88 2.05-1.4 3.2-1.4 2.2 0 4 2.02 4 4.5V19h-6Z" />
-              </svg>
-            </span>
             <span class="metric-trend trend-positive">+12%</span>
           </div>
           <div class="metric-copy">
@@ -55,11 +59,6 @@
 
         <article class="metric-card">
           <div class="metric-card-top">
-            <span class="metric-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-11Zm3 1.25v2h10v-2H7Zm0 4.5v4h4.25v-4H7Zm6.75 0v4H17v-4h-3.25Z" />
-              </svg>
-            </span>
             <span class="metric-trend trend-neutral">On pace</span>
           </div>
           <div class="metric-copy">
@@ -71,11 +70,6 @@
 
         <article class="metric-card">
           <div class="metric-card-top">
-            <span class="metric-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="m10 15.2 7.1-7.1 1.4 1.4L10 18 5.5 13.5l1.4-1.4 3.1 3.1ZM4 5h16v2H4V5Zm0 14h16v2H4v-2Z" />
-              </svg>
-            </span>
             <span class="metric-trend trend-positive">+4 done</span>
           </div>
           <div class="metric-copy">
@@ -87,11 +81,6 @@
 
         <article class="metric-card">
           <div class="metric-card-top">
-            <span class="metric-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M5 4h14v16H5V4Zm3 4v2h8V8H8Zm0 4v2h5v-2H8Zm0 4v2h7v-2H8Z" />
-              </svg>
-            </span>
             <span class="metric-trend trend-warning">Focus</span>
           </div>
           <div class="metric-copy">
@@ -103,11 +92,6 @@
 
         <article class="metric-card">
           <div class="metric-card-top">
-            <span class="metric-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm-.9 12.3 5.35-5.35-1.4-1.4-3.95 3.95-2.15-2.15-1.4 1.4 3.55 3.55Z" />
-              </svg>
-            </span>
             <span class="metric-trend trend-positive">{{ taskCompletionRate }}%</span>
           </div>
           <div class="metric-copy">
@@ -120,7 +104,7 @@
     }
   </section>
 
-  @if (!isLoading && !errorMessage) {
+  @if (!isLoading && !errorMessage && !hasNoClients) {
     <section class="dashboard-section work-section" aria-labelledby="work-heading">
       <div class="section-heading">
         <span>Main workspace</span>
@@ -169,6 +153,11 @@
                   </div>
                   <p>{{ activity.description }}</p>
                 </div>
+              </div>
+            } @empty {
+              <div class="empty-panel">
+                <strong>No recent activity</strong>
+                <p>Activity will appear here when clients, projects, or tasks are available from the API.</p>
               </div>
             }
           </div>

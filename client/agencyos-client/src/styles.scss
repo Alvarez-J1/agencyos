@@ -187,6 +187,7 @@ button:disabled {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
+  min-width: 0;
   padding: 24px;
   transition:
     border-color 160ms ease,
@@ -210,6 +211,13 @@ button:disabled {
   color: var(--color-muted);
   line-height: 1.6;
   margin: 0;
+}
+
+.card :where(a, p, span, strong, h1, h2, h3),
+.state-panel :where(a, p, span, strong, h1, h2),
+.data-row > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .metric {
@@ -344,18 +352,23 @@ button:disabled {
 }
 
 .primary-button {
+  align-items: center;
   background: var(--color-primary);
   border: 0;
   border-radius: var(--radius-md);
   color: #0a0b0f;
   cursor: pointer;
+  display: inline-flex;
   font-weight: 800;
+  justify-content: center;
+  max-width: 100%;
   min-height: 44px;
   padding: 8px 16px;
   transition:
     background 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease;
+  width: fit-content;
 }
 
 .primary-button:hover {
@@ -366,6 +379,154 @@ button:disabled {
 
 .primary-button:disabled {
   opacity: 0.68;
+}
+
+.secondary-button,
+.icon-button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 44px;
+  padding: 8px 16px;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.secondary-button:hover,
+.icon-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 24px rgba(124, 156, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.icon-button {
+  align-items: center;
+  display: inline-flex;
+  font-size: 1rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 44px;
+}
+
+.modal-backdrop {
+  align-items: center;
+  background: rgba(5, 7, 12, 0.72);
+  backdrop-filter: blur(12px);
+  display: grid;
+  inset: 0;
+  justify-items: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 30;
+}
+
+.create-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.44);
+  display: grid;
+  gap: 20px;
+  max-height: min(760px, calc(100vh - 48px));
+  max-width: 720px;
+  overflow: auto;
+  padding: 24px;
+  width: min(100%, 720px);
+}
+
+.modal-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.modal-header h2,
+.modal-header p {
+  margin: 0;
+}
+
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.modal-header p:not(.eyebrow) {
+  color: var(--color-muted);
+  margin-top: 6px;
+}
+
+.create-form {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.create-form label {
+  color: var(--color-input-label);
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.create-form input,
+.create-form select,
+.create-form textarea {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-input-value);
+  min-height: 44px;
+  padding: 8px 14px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+  width: 100%;
+}
+
+.create-form textarea {
+  min-height: 108px;
+  resize: vertical;
+}
+
+.create-form input:focus,
+.create-form select:focus,
+.create-form textarea:focus {
+  background: var(--color-surface-raised);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.12);
+}
+
+.full-field,
+.modal-actions,
+.form-error {
+  grid-column: 1 / -1;
+}
+
+.form-error {
+  background: var(--color-danger-surface);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 4px;
 }
 
 .settings-form {
@@ -389,5 +550,29 @@ button:disabled {
   .card,
   .state-panel {
     padding: 24px;
+  }
+
+  .modal-actions .primary-button,
+  .modal-actions .secondary-button {
+    width: 100%;
+  }
+
+  .page-header > .primary-button {
+    align-self: flex-start;
+    max-width: min(100%, 220px);
+    width: auto;
+  }
+
+  .create-form,
+  .modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .create-modal {
+    padding: 20px;
+  }
+
+  .modal-actions {
+    display: grid;
   }
 }

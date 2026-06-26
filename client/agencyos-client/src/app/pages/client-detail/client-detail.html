@@ -12,59 +12,131 @@
         <p class="page-description">{{ selectedClient.company }} account overview and latest activity.</p>
       </div>
 
-      <a class="back-button" routerLink="/clients">Back to Clients</a>
+      <div class="client-actions">
+        @if (!isEditing) {
+          <button class="back-button" type="button" (click)="startEditing()">Edit Client</button>
+          <button class="danger-button" type="button" [disabled]="isDeleting" (click)="deleteClient()">
+            {{ isDeleting ? 'Deleting...' : 'Delete Client' }}
+          </button>
+        }
+        <a class="back-button" routerLink="/clients">Back to Clients</a>
+      </div>
     </div>
 
-    <div class="client-summary">
-      <article class="card summary-card">
-        <span class="summary-label">Company</span>
-        <strong>{{ selectedClient.company }}</strong>
-      </article>
+    @if (errorMessage) {
+      <div class="state-panel state-panel-error compact-state" role="alert">
+        <p>{{ errorMessage }}</p>
+      </div>
+    }
 
-      <article class="card summary-card">
-        <span class="summary-label">Email</span>
-        <a class="detail-link" href="mailto:{{ selectedClient.email }}">{{ selectedClient.email }}</a>
-      </article>
+    @if (actionMessage) {
+      <div class="state-panel compact-state" role="status" aria-live="polite">
+        <p>{{ actionMessage }}</p>
+      </div>
+    }
 
-      <article class="card summary-card">
-        <span class="summary-label">Status</span>
-        <span
-          class="status-pill"
-          [class.status-onboarding]="selectedClient.status === 'Onboarding'"
-          [class.status-paused]="selectedClient.status === 'Paused'"
-        >
-          {{ selectedClient.status }}
-        </span>
-      </article>
+    @if (isEditing && editClient) {
+      <form class="card client-edit-form" (ngSubmit)="saveClient()">
+        <div class="section-heading">
+          <h2>Edit Client</h2>
+          <p>Update the client options stored in the AgencyOS backend.</p>
+        </div>
 
-      <article class="card summary-card">
-        <span class="summary-label">Active Projects</span>
-        <strong>{{ selectedClient.activeProjects }}</strong>
-      </article>
+        <div class="edit-grid">
+          <label>
+            Client name
+            <input type="text" name="name" [(ngModel)]="editClient.name" />
+          </label>
 
-      <article class="card summary-card">
-        <span class="summary-label">Last Contact</span>
-        <strong>{{ selectedClient.lastContact }}</strong>
-      </article>
-    </div>
+          <label>
+            Company
+            <input type="text" name="company" [(ngModel)]="editClient.company" />
+          </label>
+
+          <label>
+            Email
+            <input type="email" name="email" [(ngModel)]="editClient.email" />
+          </label>
+
+          <label>
+            Status
+            <select name="status" [(ngModel)]="editClient.status">
+              @for (status of statusOptions; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Active projects
+            <input type="number" min="0" name="activeProjects" [(ngModel)]="editClient.activeProjects" />
+          </label>
+
+          <label>
+            Last contact
+            <input type="text" name="lastContact" [(ngModel)]="editClient.lastContact" />
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+            {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <button class="back-button" type="button" (click)="cancelEditing()">Cancel</button>
+        </div>
+      </form>
+    } @else {
+      <div class="client-summary">
+        <article class="card summary-card">
+          <span class="summary-label">Company</span>
+          <strong>{{ selectedClient.company }}</strong>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Email</span>
+          <a class="detail-link" href="mailto:{{ selectedClient.email }}">{{ selectedClient.email }}</a>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Status</span>
+          <span
+            class="status-pill"
+            [class.status-onboarding]="selectedClient.status === 'Onboarding'"
+            [class.status-paused]="selectedClient.status === 'Paused'"
+          >
+            {{ selectedClient.status }}
+          </span>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Active Projects</span>
+          <strong>{{ selectedClient.activeProjects }}</strong>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Last Contact</span>
+          <strong>{{ selectedClient.lastContact }}</strong>
+        </article>
+      </div>
+    }
 
     <article class="card activity-card">
       <div class="section-heading">
         <h2>Recent Activity</h2>
-        <p>Static activity entries for this client.</p>
+        <p>Recent updates and activity for this client.</p>
       </div>
 
       <div class="activity-list">
-        @for (activity of recentActivity; track activity.id) {
+        @for (activity of recentActivity; track activity._id) {
           <div class="activity-item">
             <div>
               <strong>{{ activity.title }}</strong>
               <p>{{ activity.note }}</p>
             </div>
-            <span>{{ activity.date }}</span>
+            <span>{{ formatActivityDate(activity.createdAt) }}</span>
           </div>
         } @empty {
-          <p class="empty-copy">No recent activity for this client yet.</p>
+          <p class="empty-copy">No activity yet. Create or update this client to record the first event.</p>
         }
       </div>
     </article>

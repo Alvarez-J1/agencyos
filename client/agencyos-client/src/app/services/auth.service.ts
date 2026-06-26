@@ -35,6 +35,16 @@ export class AuthService {
     return rawUser ? (JSON.parse(rawUser) as AuthUser) : null;
   }
 
+  updateCurrentUser(updates: Partial<AuthUser>): void {
+    const currentUser = this.getCurrentUser();
+
+    if (!currentUser) {
+      return;
+    }
+
+    localStorage.setItem(this.userKey, JSON.stringify({ ...currentUser, ...updates }));
+  }
+
   isLoggedIn(): boolean {
     return Boolean(this.getToken());
   }

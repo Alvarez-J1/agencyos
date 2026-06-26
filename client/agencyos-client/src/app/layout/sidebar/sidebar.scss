@@ -47,10 +47,9 @@
   border-radius: var(--radius-md);
   color: rgba(229, 231, 235, 0.82);
   display: flex;
-  gap: 8px;
   font-weight: 800;
   min-height: 48px;
-  padding: 8px 16px;
+  padding: 8px 18px;
   position: relative;
   transition:
     background 160ms ease,
@@ -66,24 +65,6 @@
   width: 100%;
 }
 
-.nav-icon {
-  align-items: center;
-  background: rgba(229, 231, 235, 0.055);
-  border-radius: 7px;
-  display: inline-flex;
-  flex: 0 0 auto;
-  height: 32px;
-  justify-content: center;
-  width: 32px;
-}
-
-.nav-icon svg {
-  fill: currentColor;
-  height: 16px;
-  opacity: 0.86;
-  width: 16px;
-}
-
 .sidebar-nav a:hover,
 .sidebar-nav a.active {
   background: rgba(124, 156, 255, 0.1);
@@ -94,16 +75,6 @@
   background: rgba(248, 113, 113, 0.09);
   color: var(--color-danger);
   transform: translateX(2px);
-}
-
-.signout-button:hover .nav-icon {
-  background: rgba(248, 113, 113, 0.12);
-  color: var(--color-danger);
-}
-
-.sidebar-nav a.active .nav-icon {
-  background: rgba(124, 156, 255, 0.16);
-  color: var(--color-primary);
 }
 
 .sidebar-nav a:hover {

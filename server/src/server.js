@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/settings', settingsRoutes);
 app.use('/api/tasks', taskRoutes);
 
 const startServer = async () => {

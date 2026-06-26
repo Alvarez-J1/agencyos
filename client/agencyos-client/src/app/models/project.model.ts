@@ -8,4 +8,5 @@ export type Project = {
   status: ProjectStatus;
   dueDate: string;
   progress: number;
+  notes?: string;
 };

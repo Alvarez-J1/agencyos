@@ -5,6 +5,7 @@ import { ClientDetailComponent } from './pages/client-detail/client-detail';
 import { ClientsComponent } from './pages/clients/clients';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { LoginComponent } from './pages/login/login';
+import { ProjectDetailComponent } from './pages/project-detail/project-detail';
 import { ProjectsComponent } from './pages/projects/projects';
 import { SettingsComponent } from './pages/settings/settings';
 import { SignupComponent } from './pages/signup/signup';
@@ -46,6 +47,10 @@ export const routes: Routes = [
       {
         path: 'projects',
         component: ProjectsComponent
+      },
+      {
+        path: 'projects/:id',
+        component: ProjectDetailComponent
       },
       {
         path: 'tasks',

@@ -10,4 +10,5 @@ export type Task = {
   priority: TaskPriority;
   status: TaskStatus;
   dueDate: string;
+  notes?: string;
 };

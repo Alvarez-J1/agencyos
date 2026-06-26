@@ -6,8 +6,54 @@
       <p class="page-description">Search client accounts, review project load, and jump into a client workspace.</p>
     </div>
 
-    <button class="primary-button" type="button">New Client</button>
+    <button class="primary-button" type="button" (click)="openCreateForm()">New Client</button>
   </div>
+
+  @if (showCreateForm) {
+    <form class="client-form card" (ngSubmit)="createClient()">
+      <div class="client-form-header">
+        <div>
+          <h2>New Client</h2>
+          <p>Add a client account to the AgencyOS backend.</p>
+        </div>
+        <button class="ghost-button" type="button" (click)="closeCreateForm()">Cancel</button>
+      </div>
+
+      @if (formErrorMessage) {
+        <p class="form-error" role="alert">{{ formErrorMessage }}</p>
+      }
+
+      <div class="client-form-grid">
+        <label>
+          Client name
+          <input type="text" name="name" [(ngModel)]="newClient.name" />
+        </label>
+
+        <label>
+          Company
+          <input type="text" name="company" [(ngModel)]="newClient.company" />
+        </label>
+
+        <label>
+          Email
+          <input type="email" name="email" [(ngModel)]="newClient.email" />
+        </label>
+
+        <label>
+          Status
+          <select name="status" [(ngModel)]="newClient.status">
+            <option value="Active">Active</option>
+            <option value="Onboarding">Onboarding</option>
+            <option value="Paused">Paused</option>
+          </select>
+        </label>
+      </div>
+
+      <button class="primary-button client-submit-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+        {{ isSaving ? 'Creating...' : 'Create Client' }}
+      </button>
+    </form>
+  }
 
   <div class="clients-toolbar">
     <label for="client-search">Search clients</label>
@@ -42,7 +88,7 @@
         <span></span>
       </div>
 
-      @for (client of filteredClients; track client.id) {
+      @for (client of filteredClients; track getClientRouteId(client)) {
         <div class="clients-row">
           <div>
             <strong>{{ client.name }}</strong>
@@ -54,15 +100,15 @@
           </span>
           <span>{{ client.activeProjects }}</span>
           <span>{{ client.lastContact }}</span>
-          <a class="text-link" [routerLink]="['/clients', client.id]">View</a>
+          <a class="text-link" [routerLink]="['/clients', getClientRouteId(client)]">View</a>
         </div>
       }
     </div>
   } @else {
     <div class="state-panel">
       <h2>No clients found</h2>
-      <p>Try a different search term or add your first client when client creation is built.</p>
-      <button class="primary-button" type="button">New Client</button>
+      <p>No clients yet. Add your first client to get started.</p>
+      <button class="primary-button" type="button" (click)="openCreateForm()">New Client</button>
     </div>
   }
 </section>

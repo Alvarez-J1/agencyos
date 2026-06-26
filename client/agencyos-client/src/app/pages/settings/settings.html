@@ -7,89 +7,123 @@
     </div>
   </div>
 
-  <div class="settings-grid">
-    <article class="card settings-section">
-      <div>
-        <h2>Profile Information</h2>
-        <p>Personal details used across your AgencyOS workspace.</p>
-      </div>
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h2 class="loading-indicator">Loading settings</h2>
+      <p>Preparing your workspace preferences.</p>
+    </div>
+  } @else if (errorMessage && !settings) {
+    <div class="state-panel state-panel-error" role="alert">
+      <h2>Settings unavailable</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (settings) {
+    <form class="settings-form-shell" (ngSubmit)="saveSettings()">
+      @if (errorMessage) {
+        <div class="state-panel state-panel-error compact-state" role="alert">
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
 
-      <div class="settings-fields">
-        <label>
-          Full name
-          <input type="text" value="Avery Brooks" />
-        </label>
+      @if (successMessage) {
+        <div class="state-panel compact-state" role="status" aria-live="polite">
+          <p>{{ successMessage }}</p>
+        </div>
+      }
 
-        <label>
-          Email
-          <input type="email" value="avery@agencyos.example" />
-        </label>
-
-        <label>
-          Role
-          <input type="text" value="Agency Owner" />
-        </label>
-      </div>
-    </article>
-
-    <article class="card settings-section">
-      <div>
-        <h2>Company Information</h2>
-        <p>Workspace details shown in client-facing operations.</p>
-      </div>
-
-      <div class="settings-fields">
-        <label>
-          Company name
-          <input type="text" value="AgencyOS Demo Studio" />
-        </label>
-
-        <label>
-          Website
-          <input type="url" value="https://agencyos.example" />
-        </label>
-
-        <label>
-          Team size
-          <select>
-            <option>Solo freelancer</option>
-            <option selected>2-5 people</option>
-            <option>6-15 people</option>
-          </select>
-        </label>
-      </div>
-    </article>
-
-    <article class="card settings-section">
-      <div>
-        <h2>Notification Preferences</h2>
-        <p>Static toggles for the future notification system.</p>
-      </div>
-
-      <div class="preference-list">
-        @for (preference of notificationPreferences; track preference.label) {
-          <label class="toggle-row">
-            <span>{{ preference.label }}</span>
-            <input type="checkbox" [checked]="preference.enabled" />
-          </label>
-        }
-      </div>
-    </article>
-
-    <article class="card settings-section">
-      <div>
-        <h2>Security Settings</h2>
-        <p>Security placeholders before auth is implemented.</p>
-      </div>
-
-      <div class="security-list">
-        @for (setting of securitySettings; track setting.label) {
+      <div class="settings-grid">
+        <article class="card settings-section">
           <div>
-            <span>{{ setting.label }}</span>
-            <strong>{{ setting.value }}</strong>
+            <h2>Profile Information</h2>
+            <p>Manage the personal details shown across your account.</p>
           </div>
-        }
+
+          <div class="settings-fields">
+            <label>
+              Full name
+              <input type="text" name="name" [(ngModel)]="settings.profile.name" />
+            </label>
+
+            <label>
+              Email
+              <input type="email" name="email" [(ngModel)]="settings.profile.email" />
+            </label>
+
+            <label>
+              Role
+              <input type="text" name="role" [(ngModel)]="settings.profile.role" />
+            </label>
+          </div>
+        </article>
+
+        <article class="card settings-section">
+          <div>
+            <h2>Company Information</h2>
+            <p>Keep your company details current for your team and clients.</p>
+          </div>
+
+          <div class="settings-fields">
+            <label>
+              Company name
+              <input type="text" name="companyName" [(ngModel)]="settings.company.companyName" />
+            </label>
+
+            <label>
+              Website
+              <input type="url" name="website" [(ngModel)]="settings.company.website" />
+            </label>
+
+            <label>
+              Team size
+              <select name="teamSize" [(ngModel)]="settings.company.teamSize">
+                @for (option of teamSizeOptions; track option) {
+                  <option [value]="option">{{ option }}</option>
+                }
+              </select>
+            </label>
+          </div>
+        </article>
+
+        <article class="card settings-section">
+          <div>
+            <h2>Notification Preferences</h2>
+            <p>Choose which updates should reach your inbox.</p>
+          </div>
+
+          <div class="preference-list">
+            @for (preference of notificationPreferences; track preference.key) {
+              <label class="toggle-row">
+                <span>{{ preference.label }}</span>
+                <input
+                  type="checkbox"
+                  [name]="preference.key"
+                  [(ngModel)]="settings.notifications[preference.key]"
+                />
+              </label>
+            }
+          </div>
+        </article>
+
+        <article class="card settings-section">
+          <div>
+            <h2>Security Settings</h2>
+            <p>Review the security status for your account.</p>
+          </div>
+
+          <div class="security-list">
+            @for (setting of securitySettings; track setting.label) {
+              <div>
+                <span>{{ setting.label }}</span>
+                <strong>{{ setting.value }}</strong>
+              </div>
+            }
+          </div>
+        </article>
       </div>
-    </article>
-  </div>
+
+      <button class="primary-button settings-save-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+        {{ isSaving ? 'Saving...' : 'Save Settings' }}
+      </button>
+    </form>
+  }
 </section>

@@ -1,0 +1,138 @@
+<section class="page">
+  @if (isLoading) {
+    <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+      <h1 class="page-title loading-indicator">Loading project</h1>
+      <p>Fetching project details from the AgencyOS API.</p>
+    </div>
+  } @else if (project; as selectedProject) {
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Project detail</p>
+        <h1 class="page-title">{{ selectedProject.name }}</h1>
+        <p class="page-description">{{ selectedProject.client }} project overview and delivery status.</p>
+      </div>
+
+      <div class="project-actions">
+        @if (!isEditing) {
+          <button class="back-button" type="button" (click)="startEditing()">Edit Project</button>
+        }
+        <a class="back-button" routerLink="/projects">Back to Projects</a>
+      </div>
+    </div>
+
+    @if (errorMessage) {
+      <div class="state-panel state-panel-error compact-state" role="alert">
+        <p>{{ errorMessage }}</p>
+      </div>
+    }
+
+    @if (actionMessage) {
+      <div class="state-panel compact-state" role="status" aria-live="polite">
+        <p>{{ actionMessage }}</p>
+      </div>
+    }
+
+    @if (isEditing && editProject) {
+      <form class="card project-edit-form" (ngSubmit)="saveProject()">
+        <div class="section-heading">
+          <h2>Edit Project</h2>
+          <p>Update this project's client, delivery status, timeline, and progress.</p>
+        </div>
+
+        <div class="edit-grid">
+          <label>
+            Project name
+            <input type="text" name="project-name" [(ngModel)]="editProject.name" />
+          </label>
+
+          <label>
+            Client
+            <input type="text" name="project-client" [(ngModel)]="editProject.client" />
+          </label>
+
+          <label>
+            Status
+            <select name="project-status" [(ngModel)]="editProject.status">
+              @for (status of statusOptions; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Due date
+            <input type="date" name="project-due-date" [(ngModel)]="editProject.dueDate" />
+          </label>
+
+          <label>
+            Progress
+            <input type="number" min="0" max="100" name="project-progress" [(ngModel)]="editProject.progress" />
+          </label>
+
+          <label class="full-field">
+            Project notes
+            <textarea name="project-notes" rows="4" [(ngModel)]="editProject.notes"></textarea>
+          </label>
+        </div>
+
+        <div class="form-actions project-edit-actions">
+          <button class="danger-button" type="button" [disabled]="isDeleting" [attr.aria-busy]="isDeleting" (click)="deleteProject()">
+            {{ isDeleting ? 'Deleting...' : 'Delete Project' }}
+          </button>
+          <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+            {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <button class="back-button" type="button" (click)="cancelEditing()">Cancel</button>
+        </div>
+      </form>
+    } @else {
+      <div class="project-summary">
+        <article class="card summary-card">
+          <span class="summary-label">Client</span>
+          <strong>{{ selectedProject.client }}</strong>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Status</span>
+          <span
+            class="project-status"
+            [class.status-planning]="selectedProject.status === 'Planning'"
+            [class.status-progress]="selectedProject.status === 'In Progress'"
+            [class.status-review]="selectedProject.status === 'Review'"
+            [class.status-completed]="selectedProject.status === 'Completed'"
+          >
+            {{ selectedProject.status }}
+          </span>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Due Date</span>
+          <strong>{{ selectedProject.dueDate }}</strong>
+        </article>
+
+        <article class="card summary-card">
+          <span class="summary-label">Progress</span>
+          <div class="progress-cell">
+            <div class="progress-track" aria-hidden="true">
+              <span [style.width.%]="selectedProject.progress"></span>
+            </div>
+            <strong>{{ selectedProject.progress }}%</strong>
+          </div>
+        </article>
+      </div>
+
+      <article class="card notes-card">
+        <div class="section-heading">
+          <h2>Project Notes</h2>
+          <p>{{ selectedProject.notes || 'No notes have been added for this project yet.' }}</p>
+        </div>
+      </article>
+    }
+  } @else {
+    <div class="state-panel state-panel-error" role="alert">
+      <h1 class="page-title">Project not found</h1>
+      <p>{{ errorMessage || 'No project matches this route.' }}</p>
+      <a class="back-button" routerLink="/projects">Back to Projects</a>
+    </div>
+  }
+</section>

@@ -1,3 +1,8 @@
+.settings-form-shell {
+  display: grid;
+  gap: 24px;
+}
+
 .settings-grid {
   display: grid;
   gap: 24px;
@@ -93,6 +98,14 @@
   color: var(--color-muted);
 }
 
+.compact-state {
+  padding: 16px;
+}
+
+.settings-save-button {
+  justify-self: start;
+}
+
 @media (max-width: 900px) {
   .settings-grid {
     grid-template-columns: 1fr;
@@ -100,6 +113,10 @@
 }
 
 @media (max-width: 560px) {
+  .settings-save-button {
+    justify-self: stretch;
+  }
+
   .toggle-row,
   .security-list div {
     align-items: flex-start;

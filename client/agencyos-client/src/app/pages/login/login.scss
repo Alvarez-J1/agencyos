@@ -7,9 +7,11 @@
   display: grid;
   gap: 28px;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+  margin-inline: auto;
   min-height: 100dvh;
   overflow: hidden;
   padding: 48px clamp(48px, 8vw, 144px) 40px;
+  width: 100%;
 }
 
 .login-copy-panel {
@@ -49,8 +51,21 @@
 }
 
 @media (min-width: 1440px) {
+  .login-shell {
+    grid-template-columns: minmax(0, 780px) minmax(360px, 420px);
+    justify-content: space-between;
+    max-width: 1640px;
+    padding-inline: clamp(56px, 4vw, 72px);
+  }
+
   .login-copy-panel h1 span {
     white-space: nowrap;
+  }
+}
+
+@media (min-width: 1800px) {
+  .login-shell {
+    max-width: 1560px;
   }
 }
 
@@ -132,13 +147,13 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   display: grid;
-  gap: 24px;
+  gap: var(--auth-card-gap, 24px);
   isolation: isolate;
   justify-self: end;
   margin-top: 56px;
-  padding: 32px;
+  padding: var(--auth-card-padding, 32px);
   position: relative;
-  width: min(100%, 420px);
+  width: min(100%, var(--auth-card-width, 420px));
 }
 
 .login-card::before {
@@ -155,12 +170,12 @@
 
 .login-card-header {
   display: grid;
-  gap: 8px;
+  gap: var(--auth-header-gap, 8px);
 }
 
 .auth-card-brand {
   color: var(--color-muted);
-  font-size: 0.78rem;
+  font-size: var(--auth-brand-size, 0.78rem);
   font-weight: 850;
   letter-spacing: 0.08em;
   margin: 0;
@@ -168,7 +183,7 @@
 }
 
 .login-card h2 {
-  font-size: 2rem;
+  font-size: var(--auth-title-size, 2rem);
   letter-spacing: -0.035em;
   margin: 0;
 }
@@ -176,14 +191,37 @@
 .login-card .auth-muted,
 .login-card .auth-switch {
   color: rgba(255, 255, 255, 0.6);
+  font-size: var(--auth-muted-size, 1rem);
+  line-height: var(--auth-muted-line-height, 1.6);
+}
+
+.login-card .auth-form-modern {
+  gap: var(--auth-form-gap, 16px);
 }
 
 .login-card .auth-form-modern label {
   color: var(--color-input-label);
+  gap: var(--auth-label-gap, 8px);
+}
+
+.login-card .auth-form-modern input {
+  min-height: 44px;
+  padding: var(--auth-input-padding, 8px 16px);
+}
+
+.login-card .password-field {
+  gap: var(--auth-password-gap, 8px);
 }
 
 .login-card .password-field button {
   color: var(--color-input-label);
+  min-height: 44px;
+  padding-inline: var(--auth-password-button-padding, 14px);
+}
+
+.login-card .primary-button {
+  min-height: 44px;
+  padding: var(--auth-submit-padding, 8px 16px);
 }
 
 .login-card .field-error {
@@ -195,8 +233,8 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   display: grid;
-  gap: 8px;
-  padding: 16px;
+  gap: var(--auth-demo-gap, 8px);
+  padding: var(--auth-demo-padding, 16px);
 }
 
 .demo-account p {
@@ -239,34 +277,98 @@
   }
 
   .login-copy-panel {
-    width: 100%;
+    display: contents;
+  }
+
+  .brand-link-logo {
+    order: 1;
+  }
+
+  .login-hero-copy {
+    order: 2;
   }
 
   .login-card {
     margin-top: 0;
     justify-self: stretch;
+    order: 3;
     width: 100%;
   }
 
   .product-preview {
+    order: 4;
     width: 100%;
   }
 
 }
 
-@media (max-width: 767px) {
-  .login-copy-panel {
-    display: contents;
+@media (min-width: 769px) and (max-width: 1024px) {
+  .login-shell {
+    gap: 22px;
+    padding: 24px clamp(24px, 5vw, 48px) 40px;
   }
 
-  .product-preview {
-    order: 1;
+  .login-card {
+    --auth-card-gap: 20px;
+    --auth-card-padding: 28px;
+    --auth-card-width: 640px;
+    --auth-demo-gap: 7px;
+    --auth-demo-padding: 14px;
+    --auth-form-gap: 14px;
+    --auth-header-gap: 6px;
+    --auth-input-padding: 7px 14px;
+    --auth-label-gap: 7px;
+    --auth-muted-line-height: 1.5;
+    --auth-password-button-padding: 13px;
+    --auth-submit-padding: 6px 14px;
+    --auth-submit-width: 320px;
+    --auth-title-size: 1.85rem;
+    justify-self: center;
+    margin-top: 0;
+  }
+
+  .login-card .primary-button {
+    justify-self: center;
+    width: min(100%, var(--auth-submit-width));
+  }
+}
+
+@media (max-width: 767px) {
+  .login-shell {
+    gap: 20px;
+    padding: 18px 18px 36px;
+  }
+
+  .login-card {
+    --auth-brand-size: 0.72rem;
+    --auth-card-gap: 16px;
+    --auth-card-padding: 20px;
+    --auth-card-width: 460px;
+    --auth-demo-gap: 6px;
+    --auth-demo-padding: 12px;
+    --auth-form-gap: 12px;
+    --auth-header-gap: 6px;
+    --auth-input-padding: 7px 12px;
+    --auth-label-gap: 6px;
+    --auth-muted-line-height: 1.48;
+    --auth-muted-size: 0.95rem;
+    --auth-password-button-padding: 12px;
+    --auth-password-gap: 6px;
+    --auth-submit-padding: 6px 12px;
+    --auth-submit-width: 280px;
+    --auth-title-size: 1.65rem;
+    justify-self: center;
+  }
+
+  .login-card .primary-button {
+    justify-self: center;
+    width: min(100%, var(--auth-submit-width));
   }
 }
 
 @media (max-width: 520px) {
   .login-shell {
-    gap: 24px;
+    gap: 18px;
   }
 
   .login-copy-panel h1 {
@@ -283,6 +385,6 @@
   }
 
   .login-card {
-    padding: 24px;
+    --auth-card-padding: 18px;
   }
 }

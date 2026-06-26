@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { catchError, forkJoin, of } from 'rxjs';
 
 import { Client } from '../../models/client.model';
@@ -31,6 +32,7 @@ interface DashboardDeadline {
 
 @Component({
   selector: 'app-dashboard',
+  imports: [RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -46,47 +48,23 @@ export class DashboardComponent implements OnInit {
   tasks: Task[] = [];
   isLoading = true;
   errorMessage = '';
+  private hasApiError = false;
 
   readonly welcomeName = this.currentUser?.name.trim().split(/\s+/)[0] ?? 'there';
 
-  readonly recentActivity: ActivityItem[] = [
-    {
-      title: 'Homepage mockups approved',
-      description: 'Northstar Studio approved the latest homepage direction.',
-      timestamp: '12m ago',
-      tone: 'blue',
-      icon: 'approval'
-    },
-    {
-      title: 'Onboarding completed',
-      description: 'BrightPath Coaching moved from setup into active delivery.',
-      timestamp: '1h ago',
-      tone: 'green',
-      icon: 'client'
-    },
-    {
-      title: 'Monthly report prepared',
-      description: 'Harbor Legal Group received the retainer performance summary.',
-      timestamp: 'Yesterday',
-      tone: 'amber',
-      icon: 'report'
-    }
-  ];
-
   ngOnInit(): void {
     forkJoin({
-      clients: this.clientService.getClients().pipe(catchError(() => of([] as Client[]))),
-      projects: this.projectService.getProjects().pipe(catchError(() => of([] as Project[]))),
-      tasks: this.taskService.getTasks().pipe(catchError(() => of([] as Task[])))
+      clients: this.clientService.getClients().pipe(catchError(() => this.handleLoadError([] as Client[]))),
+      projects: this.projectService.getProjects().pipe(catchError(() => this.handleLoadError([] as Project[]))),
+      tasks: this.taskService.getTasks().pipe(catchError(() => this.handleLoadError([] as Task[])))
     }).subscribe({
       next: ({ clients, projects, tasks }) => {
         this.clients = clients;
         this.projects = projects;
         this.tasks = tasks;
-        this.errorMessage =
-          clients.length === 0 && projects.length === 0 && tasks.length === 0
-            ? 'Home data could not be loaded. Check that you are logged in and the backend is running.'
-            : '';
+        this.errorMessage = this.hasApiError
+          ? 'Home data could not be loaded. Check that you are logged in and the backend is running.'
+          : '';
         this.isLoading = false;
       },
       error: () => {
@@ -94,6 +72,10 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  get hasNoClients(): boolean {
+    return !this.errorMessage && this.clients.length === 0;
   }
 
   get totalClients(): number {
@@ -122,6 +104,45 @@ export class DashboardComponent implements OnInit {
     }
 
     return Math.round((this.completedTasks / this.tasks.length) * 100);
+  }
+
+  get recentActivity(): ActivityItem[] {
+    const activity: ActivityItem[] = [];
+    const latestClient = this.clients[0];
+    const activeProject = this.projects.find((project) => project.status !== 'Completed');
+    const completedTask = this.tasks.find((task) => task.status === 'Completed');
+
+    if (latestClient) {
+      activity.push({
+        title: 'Client loaded',
+        description: `${latestClient.company} is available in the client workspace.`,
+        timestamp: latestClient.lastContact,
+        tone: 'green',
+        icon: 'client'
+      });
+    }
+
+    if (activeProject) {
+      activity.push({
+        title: 'Project in motion',
+        description: `${activeProject.name} is currently marked ${activeProject.status.toLowerCase()}.`,
+        timestamp: activeProject.dueDate,
+        tone: 'blue',
+        icon: 'approval'
+      });
+    }
+
+    if (completedTask) {
+      activity.push({
+        title: 'Task completed',
+        description: `${completedTask.title} has been completed for ${completedTask.project}.`,
+        timestamp: completedTask.dueDate,
+        tone: 'amber',
+        icon: 'report'
+      });
+    }
+
+    return activity.slice(0, 3);
   }
 
   get upcomingDeadlines(): DashboardDeadline[] {
@@ -183,5 +204,10 @@ export class DashboardComponent implements OnInit {
     }
 
     return { urgency: 'scheduled', urgencyLabel: 'Scheduled' };
+  }
+
+  private handleLoadError<T>(fallback: T) {
+    this.hasApiError = true;
+    return of(fallback);
   }
 }

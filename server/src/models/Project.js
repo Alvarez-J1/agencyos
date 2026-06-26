@@ -7,7 +7,8 @@ const projectSchema = new mongoose.Schema(
     client: { type: String, required: true },
     status: { type: String, enum: ['Planning', 'In Progress', 'Review', 'Completed'], default: 'Planning' },
     dueDate: { type: String, required: true },
-    progress: { type: Number, min: 0, max: 100, default: 0 }
+    progress: { type: Number, min: 0, max: 100, default: 0 },
+    notes: { type: String, default: '' }
   },
   { timestamps: true }
 );

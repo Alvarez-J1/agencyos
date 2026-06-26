@@ -1,75 +1,47 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { catchError, forkJoin, of } from 'rxjs';
 
-import { Client } from '../../models/client.model';
+import { ClientActivity } from '../../models/client-activity.model';
+import { Client, ClientStatus } from '../../models/client.model';
 import { ClientService } from '../../services/client.service';
-
-type ClientActivity = {
-  id: number;
-  clientId: number;
-  title: string;
-  date: string;
-  note: string;
-};
 
 @Component({
   selector: 'app-client-detail',
-  imports: [RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './client-detail.html',
   styleUrl: './client-detail.scss'
 })
 export class ClientDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly clientService = inject(ClientService);
 
-  private readonly clientId = Number(this.route.snapshot.paramMap.get('id'));
+  private readonly clientId = this.route.snapshot.paramMap.get('id') ?? '';
 
   client: Client | undefined;
+  editClient: Client | undefined;
   isLoading = true;
+  isEditing = false;
+  isSaving = false;
+  isDeleting = false;
   errorMessage = '';
+  actionMessage = '';
+  activities: ClientActivity[] = [];
 
-  activities: ClientActivity[] = [
-    {
-      id: 1,
-      clientId: 1,
-      title: 'Reviewed homepage mockups',
-      date: 'Jun 10, 2026',
-      note: 'Client approved the direction and requested smaller testimonial cards.'
-    },
-    {
-      id: 2,
-      clientId: 1,
-      title: 'Sent project timeline',
-      date: 'Jun 7, 2026',
-      note: 'Shared the revised launch plan for the redesign sprint.'
-    },
-    {
-      id: 3,
-      clientId: 2,
-      title: 'Completed onboarding call',
-      date: 'Jun 8, 2026',
-      note: 'Captured goals, audience notes, and first campaign requirements.'
-    },
-    {
-      id: 4,
-      clientId: 3,
-      title: 'Prepared monthly report',
-      date: 'Jun 4, 2026',
-      note: 'Summarized content updates and open retainer tasks.'
-    },
-    {
-      id: 5,
-      clientId: 4,
-      title: 'Paused active work',
-      date: 'May 29, 2026',
-      note: 'Moved current requests to backlog until the client resumes.'
-    }
-  ];
+  readonly statusOptions: ClientStatus[] = ['Active', 'Onboarding', 'Paused'];
 
   ngOnInit(): void {
-    this.clientService.getClient(this.clientId).subscribe({
-      next: (client) => {
+    forkJoin({
+      client: this.clientService.getClient(this.clientId),
+      activities: this.clientService.getClientActivity(this.clientId).pipe(catchError(() => of([] as ClientActivity[])))
+    }).subscribe({
+      next: ({ client, activities }) => {
         this.client = client;
+        this.editClient = { ...client };
+        this.activities = activities;
         this.isLoading = false;
       },
       error: () => {
@@ -80,10 +52,111 @@ export class ClientDetailComponent implements OnInit {
   }
 
   get recentActivity(): ClientActivity[] {
-    if (!this.client) {
-      return [];
+    return this.activities;
+  }
+
+  formatActivityDate(value: string): string {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
     }
 
-    return this.activities.filter((activity) => activity.clientId === this.client?.id);
+    return new Intl.DateTimeFormat('en', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }).format(date);
+  }
+
+  startEditing(): void {
+    if (!this.client) {
+      return;
+    }
+
+    this.editClient = { ...this.client };
+    this.isEditing = true;
+    this.errorMessage = '';
+    this.actionMessage = '';
+  }
+
+  cancelEditing(): void {
+    this.editClient = this.client ? { ...this.client } : undefined;
+    this.isEditing = false;
+    this.errorMessage = '';
+  }
+
+  saveClient(): void {
+    if (!this.editClient) {
+      return;
+    }
+
+    if (!this.editClient.name.trim() || !this.editClient.company.trim() || !this.editClient.email.trim()) {
+      this.errorMessage = 'Name, company, and email are required.';
+      return;
+    }
+
+    this.isSaving = true;
+    this.errorMessage = '';
+    this.actionMessage = '';
+
+    this.clientService
+      .updateClient(this.clientId, {
+        name: this.editClient.name,
+        company: this.editClient.company,
+        email: this.editClient.email,
+        status: this.editClient.status,
+        activeProjects: Number(this.editClient.activeProjects),
+        lastContact: this.editClient.lastContact
+      })
+      .subscribe({
+        next: (client) => {
+          this.client = client;
+          this.editClient = { ...client };
+          this.isEditing = false;
+          this.isSaving = false;
+          this.actionMessage = 'Client updated.';
+          this.loadActivity();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage = error.error?.message || 'Client could not be updated.';
+          this.isSaving = false;
+        }
+      });
+  }
+
+  deleteClient(): void {
+    if (!this.client || !confirm(`Delete ${this.client.name}? This cannot be undone.`)) {
+      return;
+    }
+
+    this.isDeleting = true;
+    this.errorMessage = '';
+
+    this.clientService.deleteClient(this.clientId).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/clients');
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.router.navigateByUrl('/clients');
+          return;
+        }
+
+        this.errorMessage = error.error?.message || 'Client could not be deleted.';
+        this.isDeleting = false;
+      }
+    });
+  }
+
+  private loadActivity(): void {
+    this.clientService
+      .getClientActivity(this.clientId)
+      .pipe(catchError(() => of([] as ClientActivity[])))
+      .subscribe({
+        next: (activities) => {
+          this.activities = activities;
+        }
+      });
   }
 }

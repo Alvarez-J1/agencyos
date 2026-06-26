@@ -3,9 +3,77 @@
     <div>
       <p class="eyebrow">Delivery</p>
       <h1 class="page-title">Projects</h1>
-      <p class="page-description">Search and filter active client projects with static frontend data.</p>
+      <p class="page-description">Search and filter active client projects from the AgencyOS API.</p>
     </div>
+
+    <button class="primary-button" type="button" (click)="openCreateModal()">New project</button>
   </div>
+
+  @if (showCreateModal) {
+    <div class="modal-backdrop" role="presentation" (click)="closeCreateModal()">
+      <section
+        class="create-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-project-title"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">New record</p>
+            <h2 id="new-project-title">New project</h2>
+            <p>Create a project to manage client work, deadlines, tasks, and project status.</p>
+          </div>
+
+          <button class="icon-button" type="button" aria-label="Close new project form" (click)="closeCreateModal()">
+            x
+          </button>
+        </div>
+
+        @if (formErrorMessage) {
+          <p class="form-error" role="alert">{{ formErrorMessage }}</p>
+        }
+
+        <form class="create-form" (ngSubmit)="createProject()">
+          <label>
+            Project name
+            <input type="text" name="project-name" [(ngModel)]="newProject.name" />
+          </label>
+
+          <label>
+            Client
+            <input type="text" name="project-client" [(ngModel)]="newProject.client" />
+          </label>
+
+          <label>
+            Status
+            <select name="project-status" [(ngModel)]="newProject.status">
+              @for (status of createStatusOptions; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Due date
+            <input type="date" name="project-due-date" [(ngModel)]="newProject.dueDate" />
+          </label>
+
+          <label class="full-field">
+            Description/notes
+            <textarea name="project-notes" rows="4" [(ngModel)]="newProject.notes"></textarea>
+          </label>
+
+          <div class="modal-actions">
+            <button class="secondary-button" type="button" (click)="closeCreateModal()">Cancel</button>
+            <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+              {{ isSaving ? 'Creating...' : 'Create project' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  }
 
   <div class="projects-toolbar">
     <label>
@@ -49,7 +117,7 @@
         <span></span>
       </div>
 
-      @for (project of filteredProjects; track project.id) {
+      @for (project of filteredProjects; track getProjectRouteId(project)) {
         <div class="projects-row">
           <div>
             <strong>{{ project.name }}</strong>
@@ -72,14 +140,15 @@
             </div>
             <strong>{{ project.progress }}%</strong>
           </div>
-          <button class="view-button" type="button">View</button>
+          <a class="view-button" [routerLink]="['/projects', getProjectRouteId(project)]">View</a>
         </div>
       }
     </div>
   } @else {
     <div class="state-panel">
       <h2>No projects found</h2>
-      <p>Try a different search term or status filter.</p>
+      <p>Try a different search term or status filter, or create a new project.</p>
+      <button class="primary-button" type="button" (click)="openCreateModal()">New project</button>
     </div>
   }
 </section>
