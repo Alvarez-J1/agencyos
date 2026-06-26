@@ -54,8 +54,8 @@
   .login-shell {
     grid-template-columns: minmax(0, 780px) minmax(360px, 420px);
     justify-content: space-between;
-    max-width: 1640px;
-    padding-inline: clamp(56px, 4vw, 72px);
+    max-width: 1584px;
+    padding-inline: clamp(61px, 4.2vw, 74px);
   }
 
   .login-copy-panel h1 span {
@@ -65,7 +65,7 @@
 
 @media (min-width: 1800px) {
   .login-shell {
-    max-width: 1560px;
+    max-width: 1548px;
   }
 }
 

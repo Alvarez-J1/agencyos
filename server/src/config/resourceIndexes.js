@@ -15,7 +15,18 @@ const isStaleGlobalIdIndex = (index) => {
 };
 
 const dropStaleGlobalIdIndex = async ({ label, model }) => {
-  const indexes = await model.collection.indexes();
+  let indexes;
+
+  try {
+    indexes = await model.collection.indexes();
+  } catch (error) {
+    if (error.code === 26 || error.codeName === 'NamespaceNotFound') {
+      return;
+    }
+
+    throw error;
+  }
+
   const staleIndex = indexes.find(isStaleGlobalIdIndex);
 
   if (!staleIndex) {
