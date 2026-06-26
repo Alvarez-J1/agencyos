@@ -4,6 +4,7 @@ import { Observable, timeout } from 'rxjs';
 
 import { ClientActivity } from '../models/client-activity.model';
 import { Client } from '../models/client.model';
+import { environment } from '../../environments/environment';
 
 export type CreateClientRequest = Pick<Client, 'name' | 'company' | 'email' | 'status'>;
 export type UpdateClientRequest = Partial<Omit<Client, '_id' | 'id'>>;
@@ -13,7 +14,7 @@ export type UpdateClientRequest = Partial<Omit<Client, '_id' | 'id'>>;
 })
 export class ClientService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/api/clients';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/clients`;
 
   getClients(): Observable<Client[]> {
     return this.http.get<Client[]>(this.apiUrl).pipe(timeout(8000));

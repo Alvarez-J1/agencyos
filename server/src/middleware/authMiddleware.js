@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
+const { getJwtSecret } = require('../config/jwt');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
@@ -10,11 +11,11 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized. Token missing.' });
   }
 
-  try {
-    const token = authHeader.split(' ')[1];
-    const secret = process.env.JWT_SECRET || 'agencyos-dev-secret';
-    const decoded = jwt.verify(token, secret);
+  const token = authHeader.split(' ')[1];
+  const secret = getJwtSecret();
 
+  try {
+    const decoded = jwt.verify(token, secret);
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({ message: 'Authentication database unavailable.' });
     }

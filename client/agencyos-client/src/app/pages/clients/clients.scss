@@ -144,13 +144,35 @@
   overflow-wrap: anywhere;
 }
 
-.clients-row > :nth-child(4),
-.clients-row > :nth-child(5) {
+.client-identity {
+  display: grid;
+  gap: 4px;
+}
+
+.client-identity strong {
+  line-height: 1.3;
+}
+
+.project-count,
+.client-last-contact {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.project-count-label,
+.client-last-contact-label {
+  display: none;
+}
+
+.clients-row > .client-status,
+.clients-row > .project-count,
+.clients-row > .client-last-contact {
   justify-self: center;
   text-align: center;
 }
 
-.clients-row > :nth-child(6) {
+.clients-row > .client-view-link {
   justify-self: end;
   text-align: right;
 }
@@ -234,31 +256,92 @@
     border: 0;
     box-shadow: none;
     display: grid;
-    gap: 16px;
+    gap: 12px;
     overflow: visible;
   }
 
-  .clients-row,
   .clients-row-header {
     grid-template-columns: 1fr;
   }
 
   .clients-row {
+    align-items: start;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
-    padding: 24px;
+    column-gap: 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 8px;
+    padding: 18px;
   }
 
-  .clients-row > :nth-child(5) {
+  .client-identity,
+  .client-email {
+    grid-column: 1 / -1;
+  }
+
+  .client-identity {
+    gap: 2px;
+  }
+
+  .client-email {
+    line-height: 1.35;
+  }
+
+  .clients-row > .client-status,
+  .clients-row > .client-last-contact {
     justify-self: start;
     text-align: left;
   }
 
-  .clients-row > :nth-child(6) {
-    justify-self: start;
-    text-align: left;
+  .client-status {
+    grid-column: 1;
+    margin-top: 2px;
+    padding: 6px 8px;
+  }
+
+  .clients-row > .project-count,
+  .clients-row > .client-view-link {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .project-count {
+    align-self: center;
+    color: var(--color-text);
+    font-weight: 800;
+    grid-column: 2;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  .project-count-label {
+    color: var(--color-muted);
+    display: inline;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .client-last-contact {
+    color: var(--color-text);
+    gap: 6px;
+    grid-column: 1;
+    line-height: 1.35;
+  }
+
+  .client-last-contact-label {
+    color: var(--color-muted);
+    display: inline;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .client-view-link {
+    align-self: center;
+    grid-column: 2;
   }
 
   .clients-row-header {
@@ -269,6 +352,16 @@
 @media (max-width: 560px) {
   .client-form-header {
     display: grid;
+  }
+
+  .clients-toolbar {
+    padding: 18px;
+  }
+
+  .clients-row {
+    column-gap: 12px;
+    padding: 16px;
+    row-gap: 7px;
   }
 
   .client-submit-button,

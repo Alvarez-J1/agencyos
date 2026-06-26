@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (userId) => {
-  const secret = process.env.JWT_SECRET || 'agencyos-dev-secret';
+const { getJwtSecret } = require('../config/jwt');
 
-  return jwt.sign({ id: userId }, secret, {
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, getJwtSecret(), {
     expiresIn: '7d'
   });
 };

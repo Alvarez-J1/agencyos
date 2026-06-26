@@ -226,14 +226,20 @@
 
       @for (task of filteredTasks; track task.id) {
         <div class="tasks-row">
-          <div>
+          <div class="task-identity">
             <strong>{{ task.title }}</strong>
             <p class="data-label">ID #{{ task.id }}</p>
           </div>
-          <span>{{ task.project }}</span>
-          <span>{{ task.assignee }}</span>
+          <span class="task-meta task-project">
+            <span class="task-card-label">Project</span>
+            <span>{{ task.project }}</span>
+          </span>
+          <span class="task-meta task-assignee">
+            <span class="task-card-label">Assignee</span>
+            <span>{{ task.assignee }}</span>
+          </span>
           <span
-            class="priority-badge"
+            class="priority-badge task-priority"
             [class.priority-low]="task.priority === 'Low'"
             [class.priority-medium]="task.priority === 'Medium'"
             [class.priority-high]="task.priority === 'High'"
@@ -248,7 +254,10 @@
           >
             {{ task.status }}
           </span>
-          <span>{{ task.dueDate }}</span>
+          <span class="task-meta task-due-date">
+            <span class="task-card-label">Due date</span>
+            <span>{{ task.dueDate }}</span>
+          </span>
           <div class="task-actions">
             <button class="edit-button" type="button" [attr.aria-label]="'Edit ' + task.title" (click)="openEditModal(task)">
               Edit

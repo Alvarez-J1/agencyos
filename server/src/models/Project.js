@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema(
   {
-    id: { type: Number, required: true, unique: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    id: { type: Number, required: true },
     name: { type: String, required: true },
     client: { type: String, required: true },
     status: { type: String, enum: ['Planning', 'In Progress', 'Review', 'Completed'], default: 'Planning' },
@@ -12,5 +13,7 @@ const projectSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+projectSchema.index({ owner: 1, id: 1 }, { unique: true });
 
 module.exports = mongoose.model('Project', projectSchema);

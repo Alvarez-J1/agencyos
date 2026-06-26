@@ -16,10 +16,11 @@ const createTask = async (req, res) => {
       return res.status(400).json({ message: 'Task title, project, and due date are required.' });
     }
 
-    const latestTask = await Task.findOne().sort({ id: -1 }).lean();
+    const latestTask = await Task.findOne({ owner: req.user._id }).sort({ id: -1 }).lean();
     const nextId = latestTask ? latestTask.id + 1 : 1;
 
     const task = await Task.create({
+      owner: req.user._id,
       id: nextId,
       title,
       project,
@@ -36,9 +37,9 @@ const createTask = async (req, res) => {
   }
 };
 
-const getTasks = async (_req, res) => {
+const getTasks = async (req, res) => {
   try {
-    const databaseTasks = await Task.find().sort({ dueDate: 1 }).lean();
+    const databaseTasks = await Task.find({ owner: req.user._id }).sort({ dueDate: 1 }).lean();
     return res.json(databaseTasks);
   } catch (error) {
     return res.status(500).json({ message: 'Tasks could not be loaded.' });
@@ -48,6 +49,11 @@ const getTasks = async (_req, res) => {
 const updateTask = async (req, res) => {
   try {
     const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ message: 'Task id is invalid.' });
+    }
+
     const allowedUpdates = ['title', 'project', 'assignee', 'priority', 'status', 'dueDate', 'notes'];
     const updates = {};
 
@@ -57,7 +63,7 @@ const updateTask = async (req, res) => {
       }
     });
 
-    const task = await Task.findOneAndUpdate({ id }, updates, {
+    const task = await Task.findOneAndUpdate({ owner: req.user._id, id }, updates, {
       new: true,
       runValidators: true
     }).lean();
@@ -80,7 +86,7 @@ const deleteTask = async (req, res) => {
       return res.status(400).json({ message: 'Task id is invalid.' });
     }
 
-    const task = await Task.findOneAndDelete({ id }).lean();
+    const task = await Task.findOneAndDelete({ owner: req.user._id, id }).lean();
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });

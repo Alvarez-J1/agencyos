@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 import { AuthResponse, AuthUser, LoginRequest, SignupRequest } from '../models/auth.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/api/auth';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/auth`;
   private readonly tokenKey = 'agencyos_token';
   private readonly userKey = 'agencyos_user';
 

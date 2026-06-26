@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, timeout } from 'rxjs';
 
 import { Project } from '../models/project.model';
+import { environment } from '../../environments/environment';
 
 export type CreateProjectRequest = Pick<Project, 'name' | 'client' | 'status' | 'dueDate' | 'notes'>;
 export type UpdateProjectRequest = Partial<Omit<Project, '_id' | 'id'>>;
@@ -12,7 +13,7 @@ export type UpdateProjectRequest = Partial<Omit<Project, '_id' | 'id'>>;
 })
 export class ProjectService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/api/projects';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/projects`;
 
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(this.apiUrl).pipe(timeout(8000));

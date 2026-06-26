@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, timeout } from 'rxjs';
 
 import { SettingsData } from '../models/settings.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/api/settings';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/settings`;
 
   getSettings(): Observable<SettingsData> {
     return this.http.get<SettingsData>(this.apiUrl).pipe(timeout(8000));

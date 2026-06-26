@@ -3,23 +3,23 @@ const mongoose = require('mongoose');
 const Client = require('../models/Client');
 const ClientActivity = require('../models/ClientActivity');
 
-const getClientQuery = (idParam) => {
+const getClientQuery = (idParam, owner) => {
   const numericId = Number(idParam);
 
   if (!Number.isNaN(numericId)) {
-    return { id: numericId };
+    return { owner, id: numericId };
   }
 
   if (mongoose.Types.ObjectId.isValid(idParam)) {
-    return { _id: idParam };
+    return { owner, _id: idParam };
   }
 
   return null;
 };
 
-const logClientActivity = async (clientId, title, note) => {
+const logClientActivity = async (owner, clientId, title, note) => {
   try {
-    await ClientActivity.create({ clientId, title, note });
+    await ClientActivity.create({ owner, clientId, title, note });
   } catch (error) {
     console.warn('Client activity could not be recorded:', error.message);
   }
@@ -46,10 +46,11 @@ const createClient = async (req, res) => {
       return res.status(400).json({ message: 'Name, company, and email are required.' });
     }
 
-    const latestClient = await Client.findOne().sort({ id: -1 }).lean();
+    const latestClient = await Client.findOne({ owner: req.user._id }).sort({ id: -1 }).lean();
     const nextId = latestClient ? latestClient.id + 1 : 1;
 
     const client = await Client.create({
+      owner: req.user._id,
       id: nextId,
       name,
       company,
@@ -63,7 +64,12 @@ const createClient = async (req, res) => {
       }).format(new Date())
     });
 
-    void logClientActivity(client.id, 'Client created', `${client.name} was added to ${client.company}.`);
+    await logClientActivity(
+      req.user._id,
+      client.id,
+      'Client created',
+      `${client.name} was added to ${client.company}.`
+    );
 
     return res.status(201).json(client);
   } catch (error) {
@@ -71,9 +77,9 @@ const createClient = async (req, res) => {
   }
 };
 
-const getClients = async (_req, res) => {
+const getClients = async (req, res) => {
   try {
-    const databaseClients = await Client.find().sort({ name: 1 }).lean();
+    const databaseClients = await Client.find({ owner: req.user._id }).sort({ name: 1 }).lean();
     return res.json(databaseClients);
   } catch (error) {
     return res.status(500).json({ message: 'Clients could not be loaded.' });
@@ -81,7 +87,7 @@ const getClients = async (_req, res) => {
 };
 
 const getClientById = async (req, res) => {
-  const query = getClientQuery(req.params.id);
+  const query = getClientQuery(req.params.id, req.user._id);
 
   if (!query) {
     return res.status(400).json({ message: 'Client id is invalid.' });
@@ -102,7 +108,7 @@ const getClientById = async (req, res) => {
 
 const updateClient = async (req, res) => {
   try {
-    const query = getClientQuery(req.params.id);
+    const query = getClientQuery(req.params.id, req.user._id);
     const updates = buildClientUpdates(req.body);
 
     if (!query) {
@@ -122,7 +128,12 @@ const updateClient = async (req, res) => {
       return res.status(404).json({ message: 'Client not found' });
     }
 
-    void logClientActivity(client.id, 'Client updated', `${client.name}'s account details were updated.`);
+    await logClientActivity(
+      req.user._id,
+      client.id,
+      'Client updated',
+      `${client.name}'s account details were updated.`
+    );
 
     return res.json(client);
   } catch (error) {
@@ -132,7 +143,7 @@ const updateClient = async (req, res) => {
 
 const deleteClient = async (req, res) => {
   try {
-    const query = getClientQuery(req.params.id);
+    const query = getClientQuery(req.params.id, req.user._id);
 
     if (!query) {
       return res.status(400).json({ message: 'Client id is invalid.' });
@@ -144,7 +155,7 @@ const deleteClient = async (req, res) => {
       return res.status(404).json({ message: 'Client not found' });
     }
 
-    await ClientActivity.deleteMany({ clientId: client.id });
+    await ClientActivity.deleteMany({ owner: req.user._id, clientId: client.id });
 
     return res.json({ message: 'Client deleted.' });
   } catch (error) {

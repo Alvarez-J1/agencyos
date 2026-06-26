@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const clientSchema = new mongoose.Schema(
   {
-    id: { type: Number, required: true, unique: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    id: { type: Number, required: true },
     name: { type: String, required: true },
     company: { type: String, required: true },
     email: { type: String, required: true },
@@ -12,5 +13,7 @@ const clientSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+clientSchema.index({ owner: 1, id: 1 }, { unique: true });
 
 module.exports = mongoose.model('Client', clientSchema);

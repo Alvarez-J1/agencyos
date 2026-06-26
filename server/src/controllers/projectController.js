@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 const Project = require('../models/Project');
 
-const getProjectQuery = (idParam) => {
+const getProjectQuery = (idParam, owner) => {
   const numericId = Number(idParam);
 
   if (!Number.isNaN(numericId)) {
-    return { id: numericId };
+    return { owner, id: numericId };
   }
 
   if (mongoose.Types.ObjectId.isValid(idParam)) {
-    return { _id: idParam };
+    return { owner, _id: idParam };
   }
 
   return null;
@@ -24,10 +24,11 @@ const createProject = async (req, res) => {
       return res.status(400).json({ message: 'Project name, client, and due date are required.' });
     }
 
-    const latestProject = await Project.findOne().sort({ id: -1 }).lean();
+    const latestProject = await Project.findOne({ owner: req.user._id }).sort({ id: -1 }).lean();
     const nextId = latestProject ? latestProject.id + 1 : 1;
 
     const project = await Project.create({
+      owner: req.user._id,
       id: nextId,
       name,
       client,
@@ -43,9 +44,9 @@ const createProject = async (req, res) => {
   }
 };
 
-const getProjects = async (_req, res) => {
+const getProjects = async (req, res) => {
   try {
-    const databaseProjects = await Project.find().sort({ dueDate: 1 }).lean();
+    const databaseProjects = await Project.find({ owner: req.user._id }).sort({ dueDate: 1 }).lean();
     return res.json(databaseProjects);
   } catch (error) {
     return res.status(500).json({ message: 'Projects could not be loaded.' });
@@ -53,7 +54,7 @@ const getProjects = async (_req, res) => {
 };
 
 const getProjectById = async (req, res) => {
-  const query = getProjectQuery(req.params.id);
+  const query = getProjectQuery(req.params.id, req.user._id);
 
   if (!query) {
     return res.status(400).json({ message: 'Project id is invalid.' });
@@ -73,7 +74,7 @@ const getProjectById = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-  const query = getProjectQuery(req.params.id);
+  const query = getProjectQuery(req.params.id, req.user._id);
 
   if (!query) {
     return res.status(400).json({ message: 'Project id is invalid.' });
@@ -109,7 +110,7 @@ const updateProject = async (req, res) => {
 };
 
 const deleteProject = async (req, res) => {
-  const query = getProjectQuery(req.params.id);
+  const query = getProjectQuery(req.params.id, req.user._id);
 
   if (!query) {
     return res.status(400).json({ message: 'Project id is invalid.' });

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, timeout } from 'rxjs';
 
 import { Task, TaskStatus } from '../models/task.model';
+import { environment } from '../../environments/environment';
 
 export type CreateTaskRequest = Pick<Task, 'title' | 'project' | 'assignee' | 'priority' | 'status' | 'dueDate' | 'notes'>;
 
@@ -11,7 +12,7 @@ export type CreateTaskRequest = Pick<Task, 'title' | 'project' | 'assignee' | 'p
 })
 export class TaskService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:5000/api/tasks';
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/tasks`;
 
   getTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(this.apiUrl).pipe(timeout(8000));
