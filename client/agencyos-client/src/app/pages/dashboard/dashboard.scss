@@ -202,6 +202,24 @@
   padding: 0 8px;
 }
 
+.metric-trend.trend-positive {
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--color-success);
+  opacity: 1;
+}
+
+.metric-trend.trend-neutral {
+  background: rgba(124, 156, 255, 0.1);
+  color: var(--color-primary);
+  opacity: 1;
+}
+
+.metric-trend.trend-warning {
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--color-warning);
+  opacity: 1;
+}
+
 .metric-copy {
   display: grid;
   gap: 8px;

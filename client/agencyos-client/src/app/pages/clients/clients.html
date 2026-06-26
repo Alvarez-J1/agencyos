@@ -85,7 +85,7 @@
         <span>Status</span>
         <span>Active Projects</span>
         <span>Last Contact</span>
-        <span></span>
+        <span>Action</span>
       </div>
 
       @for (client of filteredClients; track getClientRouteId(client)) {
@@ -95,17 +95,19 @@
             <p class="data-label">{{ client.company }}</p>
           </div>
           <a class="client-email" href="mailto:{{ client.email }}">{{ client.email }}</a>
-          <span class="status-pill client-status" [class.status-paused]="client.status === 'Paused'">
-            {{ client.status }}
-          </span>
-          <span class="project-count">
-            <span class="project-count-value">{{ client.activeProjects }}</span>
-            <span class="project-count-label">{{ client.activeProjects === 1 ? 'project' : 'projects' }}</span>
-          </span>
-          <span class="client-last-contact">
-            <span class="client-last-contact-label">Last contact</span>
-            <span>{{ client.lastContact }}</span>
-          </span>
+          <div class="client-card-meta">
+            <span class="status-pill client-status" [class.status-paused]="client.status === 'Paused'">
+              {{ client.status }}
+            </span>
+            <span class="project-count">
+              <span class="project-count-value">{{ client.activeProjects }}</span>
+              <span class="project-count-label">{{ client.activeProjects === 1 ? 'project' : 'projects' }}</span>
+            </span>
+            <span class="client-last-contact">
+              <span class="client-last-contact-label">Last contact</span>
+              <span>{{ client.lastContact }}</span>
+            </span>
+          </div>
           <a class="text-link client-view-link" [routerLink]="['/clients', getClientRouteId(client)]">View</a>
         </div>
       }

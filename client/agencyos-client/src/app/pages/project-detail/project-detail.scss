@@ -30,12 +30,26 @@
 }
 
 .project-edit-actions {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
 }
 
-.project-edit-actions .primary-button {
-  grid-column: 3;
+.project-primary-actions {
+  display: flex;
+  gap: 12px;
+  order: 2;
+}
+
+.project-edit-actions .danger-button {
+  order: 1;
+}
+
+.project-edit-actions .primary-button,
+.project-edit-actions .back-button,
+.project-edit-actions .danger-button {
+  justify-content: center;
+  min-width: 144px;
 }
 
 .danger-button {
@@ -211,6 +225,32 @@
   .edit-grid {
     grid-template-columns: 1fr;
   }
+
+  .project-edit-actions,
+  .project-primary-actions {
+    display: grid;
+    gap: 12px;
+  }
+
+  .project-edit-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .project-primary-actions {
+    order: 1;
+  }
+
+  .project-edit-actions .danger-button {
+    order: 2;
+  }
+
+  .project-edit-actions .primary-button,
+  .project-edit-actions .back-button,
+  .project-edit-actions .danger-button {
+    min-height: 44px;
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -221,13 +261,5 @@
   .project-actions,
   .form-actions {
     display: grid;
-  }
-
-  .project-edit-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .project-edit-actions .primary-button {
-    grid-column: auto;
   }
 }

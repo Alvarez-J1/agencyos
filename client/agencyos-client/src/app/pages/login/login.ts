@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.html',
   styleUrls: ['../auth.scss', './login.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
@@ -26,6 +26,11 @@ export class LoginComponent {
   isLoading = false;
   showPassword = false;
   errorMessage = '';
+  passwordPlaceholder = 'Enter your password';
+
+  ngOnInit(): void {
+    this.updatePasswordPlaceholder();
+  }
 
   get emailInvalid(): boolean {
     return this.submitted && (!this.form.email || !this.form.email.includes('@'));
@@ -37,6 +42,16 @@ export class LoginComponent {
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  @HostListener('window:resize')
+  updatePasswordPlaceholder(): void {
+    const isCompactWidth =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(max-width: 332px)').matches ||
+        Math.min(window.innerWidth, document.documentElement.clientWidth || window.innerWidth) < 333);
+
+    this.passwordPlaceholder = isCompactWidth ? 'Enter your pass...' : 'Enter your password';
   }
 
   submit(): void {

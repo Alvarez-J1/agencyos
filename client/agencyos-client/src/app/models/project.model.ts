@@ -9,4 +9,6 @@ export type Project = {
   dueDate: string;
   progress: number;
   notes?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };

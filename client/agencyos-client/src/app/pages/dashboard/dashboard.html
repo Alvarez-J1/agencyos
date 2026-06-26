@@ -4,14 +4,14 @@
       <div class="hero-copy">
         <p class="eyebrow hero-kicker">Overview</p>
         <h1 id="overview-heading">Welcome back, {{ welcomeName }}</h1>
-        <p>Here's what's happening in your workspace today.</p>
+        <p>See the latest activity across your clients, projects, and tasks.</p>
       </div>
 
       <aside class="hero-health" aria-label="Workspace health">
         <span>Workspace health</span>
         @if (!isLoading && !errorMessage) {
           <strong>{{ taskCompletionRate }}%</strong>
-          <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
+          <p>{{ taskCompletionCopy }}</p>
           <div class="health-meter" aria-hidden="true">
             <span [style.width.%]="taskCompletionRate"></span>
           </div>
@@ -47,58 +47,103 @@
     } @else {
       <section class="metric-grid" aria-label="Workspace metrics">
         <article class="metric-card metric-card-primary">
-          <div class="metric-card-top">
-            <span class="metric-trend trend-positive">+12%</span>
-          </div>
+          @if (totalClientsBadge; as badge) {
+            <div class="metric-card-top">
+              <span
+                class="metric-trend"
+                [class.trend-positive]="badge.tone === 'positive'"
+                [class.trend-neutral]="badge.tone === 'neutral'"
+                [class.trend-warning]="badge.tone === 'warning'"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          }
           <div class="metric-copy">
             <span>Total clients</span>
             <strong>{{ totalClients }}</strong>
           </div>
-          <p>{{ totalClients }} accounts tracked across the workspace.</p>
+          <p>{{ totalClientsCopy }}</p>
         </article>
 
         <article class="metric-card">
-          <div class="metric-card-top">
-            <span class="metric-trend trend-neutral">On pace</span>
-          </div>
+          @if (activeProjectsBadge; as badge) {
+            <div class="metric-card-top">
+              <span
+                class="metric-trend"
+                [class.trend-positive]="badge.tone === 'positive'"
+                [class.trend-neutral]="badge.tone === 'neutral'"
+                [class.trend-warning]="badge.tone === 'warning'"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          }
           <div class="metric-copy">
             <span>Active projects</span>
             <strong>{{ activeProjects }}</strong>
           </div>
-          <p>{{ activeProjects }} projects currently moving through delivery.</p>
+          <p>{{ activeProjectsCopy }}</p>
         </article>
 
         <article class="metric-card">
-          <div class="metric-card-top">
-            <span class="metric-trend trend-positive">+4 done</span>
-          </div>
+          @if (completedProjectsBadge; as badge) {
+            <div class="metric-card-top">
+              <span
+                class="metric-trend"
+                [class.trend-positive]="badge.tone === 'positive'"
+                [class.trend-neutral]="badge.tone === 'neutral'"
+                [class.trend-warning]="badge.tone === 'warning'"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          }
           <div class="metric-copy">
             <span>Completed projects</span>
             <strong>{{ completedProjects }}</strong>
           </div>
-          <p>Finished work ready for reporting and follow-up.</p>
+          <p>Completed projects are available for reference.</p>
         </article>
 
         <article class="metric-card">
-          <div class="metric-card-top">
-            <span class="metric-trend trend-warning">Focus</span>
-          </div>
+          @if (pendingTasksBadge; as badge) {
+            <div class="metric-card-top">
+              <span
+                class="metric-trend"
+                [class.trend-positive]="badge.tone === 'positive'"
+                [class.trend-neutral]="badge.tone === 'neutral'"
+                [class.trend-warning]="badge.tone === 'warning'"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          }
           <div class="metric-copy">
             <span>Pending tasks</span>
             <strong>{{ pendingTasks }}</strong>
           </div>
-          <p>{{ pendingTasks }} tasks still need attention this week.</p>
+          <p>{{ pendingTasksCopy }}</p>
         </article>
 
         <article class="metric-card">
-          <div class="metric-card-top">
-            <span class="metric-trend trend-positive">{{ taskCompletionRate }}%</span>
-          </div>
+          @if (completedTasksBadge; as badge) {
+            <div class="metric-card-top">
+              <span
+                class="metric-trend"
+                [class.trend-positive]="badge.tone === 'positive'"
+                [class.trend-neutral]="badge.tone === 'neutral'"
+                [class.trend-warning]="badge.tone === 'warning'"
+              >
+                {{ badge.text }}
+              </span>
+            </div>
+          }
           <div class="metric-copy">
             <span>Completed tasks</span>
             <strong>{{ completedTasks }}</strong>
           </div>
-          <p>A clear signal of delivery momentum.</p>
+          <p>Track completed work over time.</p>
         </article>
       </section>
     }
@@ -157,7 +202,7 @@
             } @empty {
               <div class="empty-panel">
                 <strong>No recent activity</strong>
-                <p>Activity will appear here when clients, projects, or tasks are available from the API.</p>
+                <p>Activity will appear here as work gets updated.</p>
               </div>
             }
           </div>
@@ -195,7 +240,7 @@
           } @else {
             <div class="empty-panel">
               <strong>No upcoming deadlines</strong>
-              <p>Your workspace is clear for now.</p>
+              <p>You're all caught up for now.</p>
             </div>
           }
         </div>

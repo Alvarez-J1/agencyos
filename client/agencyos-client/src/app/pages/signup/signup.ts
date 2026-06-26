@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './signup.html',
   styleUrls: ['../auth.scss', '../login/login.scss']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router
@@ -27,6 +27,11 @@ export class SignupComponent {
   isLoading = false;
   showPassword = false;
   errorMessage = '';
+  passwordPlaceholder = 'Enter your password';
+
+  ngOnInit(): void {
+    this.updatePasswordPlaceholder();
+  }
 
   get nameInvalid(): boolean {
     return this.submitted && this.form.name.trim().length < 2;
@@ -46,6 +51,16 @@ export class SignupComponent {
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  @HostListener('window:resize')
+  updatePasswordPlaceholder(): void {
+    const isCompactWidth =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(max-width: 332px)').matches ||
+        Math.min(window.innerWidth, document.documentElement.clientWidth || window.innerWidth) < 333);
+
+    this.passwordPlaceholder = isCompactWidth ? 'Enter your pass...' : 'Enter your password';
   }
 
   submit(): void {

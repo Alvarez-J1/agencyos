@@ -113,10 +113,19 @@
 }
 
 .clients-table {
+  --clients-table-columns:
+    minmax(8.5rem, 1.55fr)
+    minmax(10rem, 1.35fr)
+    minmax(6.5rem, 0.65fr)
+    minmax(8rem, 0.75fr)
+    minmax(8rem, 0.78fr)
+    minmax(4rem, 0.35fr);
+
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
+  min-width: 54rem;
   overflow: hidden;
 }
 
@@ -124,14 +133,8 @@
   align-items: center;
   border-bottom: 1px solid var(--color-border);
   display: grid;
-  column-gap: 12px;
-  grid-template-columns:
-    minmax(180px, 1.2fr)
-    minmax(210px, 1.1fr)
-    minmax(140px, 0.7fr)
-    minmax(128px, 0.6fr)
-    minmax(144px, 0.7fr)
-    minmax(56px, auto);
+  column-gap: 16px;
+  grid-template-columns: var(--clients-table-columns);
   row-gap: 16px;
   padding: 16px 24px;
   transition:
@@ -139,9 +142,15 @@
     border-color 160ms ease;
 }
 
-.clients-row > * {
+.clients-row > *,
+.client-card-meta > * {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.client-card-meta {
+  display: contents;
 }
 
 .client-identity {
@@ -153,11 +162,23 @@
   line-height: 1.3;
 }
 
+.client-identity strong,
+.client-identity .data-label,
+.client-email,
+.client-last-contact,
+.client-view-link,
+.clients-row-header > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .project-count,
 .client-last-contact {
   align-items: center;
   display: inline-flex;
   gap: 4px;
+  font-variant-numeric: tabular-nums;
 }
 
 .project-count-label,
@@ -165,16 +186,22 @@
   display: none;
 }
 
-.clients-row > .client-status,
-.clients-row > .project-count,
-.clients-row > .client-last-contact {
+.clients-row .client-status,
+.clients-row .project-count,
+.clients-row .client-last-contact {
+  justify-self: start;
+  text-align: left;
+}
+
+.clients-row-header > span:nth-child(4),
+.clients-row .project-count {
   justify-self: center;
   text-align: center;
 }
 
 .clients-row > .client-view-link {
-  justify-self: end;
-  text-align: right;
+  justify-self: start;
+  text-align: left;
 }
 
 .clients-row:last-child {
@@ -196,8 +223,6 @@
 
 .client-email {
   color: var(--color-muted);
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 .client-email:hover {
@@ -228,7 +253,7 @@
   color: var(--color-muted);
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1199px) {
   .page-header {
     align-items: flex-start;
     display: grid;
@@ -257,6 +282,7 @@
     box-shadow: none;
     display: grid;
     gap: 12px;
+    min-width: 0;
     overflow: visible;
   }
 
@@ -270,50 +296,78 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
-    column-gap: 16px;
-    grid-template-columns: minmax(0, 1fr) auto;
-    row-gap: 8px;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 12px;
     padding: 18px;
   }
 
   .client-identity,
-  .client-email {
+  .client-email,
+  .client-card-meta,
+  .client-view-link {
     grid-column: 1 / -1;
   }
 
   .client-identity {
-    gap: 2px;
+    gap: 3px;
   }
 
   .client-email {
     line-height: 1.35;
   }
 
-  .clients-row > .client-status,
-  .clients-row > .client-last-contact {
+  .client-identity strong,
+  .client-identity .data-label,
+  .client-email,
+  .client-last-contact,
+  .client-view-link {
+    overflow: visible;
+    overflow-wrap: break-word;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .client-email {
+    overflow-wrap: anywhere;
+  }
+
+  .client-card-meta {
+    align-items: center;
+    column-gap: 16px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 12px;
+  }
+
+  .clients-row .client-status,
+  .clients-row .project-count,
+  .clients-row .client-last-contact {
     justify-self: start;
     text-align: left;
   }
 
   .client-status {
-    grid-column: 1;
-    margin-top: 2px;
+    align-self: center;
     padding: 6px 8px;
   }
 
-  .clients-row > .project-count,
-  .clients-row > .client-view-link {
-    justify-self: end;
-    text-align: right;
-  }
-
   .project-count {
+    align-items: center;
     align-self: center;
     color: var(--color-text);
     font-weight: 800;
-    grid-column: 2;
     line-height: 1.3;
     white-space: nowrap;
+  }
+
+  .project-count-value,
+  .project-count-label {
+    line-height: 1;
+  }
+
+  .project-count-value {
+    font-size: 1rem;
+    font-weight: 850;
   }
 
   .project-count-label {
@@ -325,14 +379,15 @@
 
   .client-last-contact {
     color: var(--color-text);
-    gap: 6px;
-    grid-column: 1;
+    display: grid;
+    gap: 4px;
+    grid-column: 1 / -1;
     line-height: 1.35;
   }
 
   .client-last-contact-label {
     color: var(--color-muted);
-    display: inline;
+    display: block;
     font-size: 0.72rem;
     font-weight: 850;
     letter-spacing: 0.04em;
@@ -340,8 +395,18 @@
   }
 
   .client-view-link {
-    align-self: center;
-    grid-column: 2;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+    min-height: 42px;
+    padding-top: 12px;
+    text-align: left;
+  }
+
+  .client-view-link::after {
+    content: "\2192";
   }
 
   .clients-row-header {
@@ -359,9 +424,8 @@
   }
 
   .clients-row {
-    column-gap: 12px;
     padding: 16px;
-    row-gap: 7px;
+    row-gap: 12px;
   }
 
   .client-submit-button,

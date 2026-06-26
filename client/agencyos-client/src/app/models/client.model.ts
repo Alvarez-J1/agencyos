@@ -9,4 +9,6 @@ export type Client = {
   status: ClientStatus;
   activeProjects: number;
   lastContact: string;
+  createdAt?: string;
+  updatedAt?: string;
 };

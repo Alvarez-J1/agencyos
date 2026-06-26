@@ -76,13 +76,21 @@
         </div>
 
         <div class="form-actions project-edit-actions">
-          <button class="danger-button" type="button" [disabled]="isDeleting" [attr.aria-busy]="isDeleting" (click)="deleteProject()">
+          <div class="project-primary-actions">
+            <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+              {{ isSaving ? 'Saving...' : 'Save Changes' }}
+            </button>
+            <button class="back-button" type="button" (click)="cancelEditing()">Cancel</button>
+          </div>
+          <button
+            class="danger-button"
+            type="button"
+            [disabled]="isDeleting"
+            [attr.aria-busy]="isDeleting"
+            (click)="deleteProject()"
+          >
             {{ isDeleting ? 'Deleting...' : 'Delete Project' }}
           </button>
-          <button class="primary-button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
-            {{ isSaving ? 'Saving...' : 'Save Changes' }}
-          </button>
-          <button class="back-button" type="button" (click)="cancelEditing()">Cancel</button>
         </div>
       </form>
     } @else {

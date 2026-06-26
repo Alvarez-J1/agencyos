@@ -13,6 +13,7 @@ import { TaskService } from '../../services/task.service';
 type ActivityTone = 'blue' | 'green' | 'amber';
 type ActivityIcon = 'approval' | 'client' | 'report';
 type DeadlineUrgency = 'due-soon' | 'upcoming' | 'scheduled';
+type MetricBadgeTone = 'positive' | 'neutral' | 'warning';
 
 interface ActivityItem {
   title: string;
@@ -28,6 +29,11 @@ interface DashboardDeadline {
   dueDate: string;
   urgency: DeadlineUrgency;
   urgencyLabel: string;
+}
+
+interface MetricBadge {
+  text: string;
+  tone: MetricBadgeTone;
 }
 
 @Component({
@@ -106,6 +112,103 @@ export class DashboardComponent implements OnInit {
     return Math.round((this.completedTasks / this.tasks.length) * 100);
   }
 
+  get taskCompletionCopy(): string {
+    if (this.tasks.length === 0) {
+      return 'No tasks yet. Create your first task to get started.';
+    }
+
+    return `${this.completedTasks} of ${this.tasks.length} tasks completed`;
+  }
+
+  get totalClientsCopy(): string {
+    return this.totalClients === 1
+      ? '1 client in your workspace.'
+      : `${this.totalClients} clients in your workspace.`;
+  }
+
+  get activeProjectsCopy(): string {
+    return this.activeProjects === 0 ? 'No active projects.' : `${this.activeProjects} active projects.`;
+  }
+
+  get pendingTasksCopy(): string {
+    return this.pendingTasks === 0 ? "You're all caught up." : `${this.pendingTasks} tasks need your attention.`;
+  }
+
+  get totalClientsBadge(): MetricBadge | null {
+    const clientsCreatedThisMonth = this.clients.filter((client) => this.isCurrentMonth(client.createdAt)).length;
+
+    return clientsCreatedThisMonth > 0
+      ? { text: `+${clientsCreatedThisMonth} this month`, tone: 'positive' }
+      : null;
+  }
+
+  get activeProjectsBadge(): MetricBadge | null {
+    const activeProjects = this.projects.filter((project) => project.status !== 'Completed');
+
+    if (activeProjects.length === 0) {
+      return null;
+    }
+
+    const projectsWithValidDueDates = activeProjects.filter((project) => this.getDaysUntilDue(project.dueDate) !== null);
+
+    if (projectsWithValidDueDates.length === 0) {
+      return null;
+    }
+
+    const overdueProjects = projectsWithValidDueDates.filter((project) => {
+      const daysUntilDue = this.getDaysUntilDue(project.dueDate);
+      return daysUntilDue !== null && daysUntilDue < 0;
+    }).length;
+
+    if (overdueProjects > 0) {
+      return { text: overdueProjects === 1 ? '1 overdue' : `${overdueProjects} overdue`, tone: 'warning' };
+    }
+
+    return { text: 'On track', tone: 'positive' };
+  }
+
+  get completedProjectsBadge(): MetricBadge | null {
+    const projectsCompletedThisMonth = this.projects.filter(
+      (project) => project.status === 'Completed' && this.isCurrentMonth(project.updatedAt || project.createdAt)
+    ).length;
+
+    return projectsCompletedThisMonth > 0
+      ? { text: `+${projectsCompletedThisMonth} this month`, tone: 'positive' }
+      : null;
+  }
+
+  get pendingTasksBadge(): MetricBadge | null {
+    const pendingTasks = this.tasks.filter((task) => task.status !== 'Completed');
+
+    if (pendingTasks.length === 0) {
+      return null;
+    }
+
+    const urgentTasks = pendingTasks.filter((task) => {
+      const daysUntilDue = this.getDaysUntilDue(task.dueDate);
+      return task.priority === 'High' || (daysUntilDue !== null && daysUntilDue <= 0);
+    }).length;
+
+    if (urgentTasks > 0) {
+      return { text: 'Needs attention', tone: 'warning' };
+    }
+
+    const dueSoonTasks = pendingTasks.filter((task) => {
+      const daysUntilDue = this.getDaysUntilDue(task.dueDate);
+      return daysUntilDue !== null && daysUntilDue <= 3;
+    }).length;
+
+    return dueSoonTasks > 0 ? { text: `${dueSoonTasks} due soon`, tone: 'neutral' } : null;
+  }
+
+  get completedTasksBadge(): MetricBadge | null {
+    if (this.tasks.length === 0 || this.completedTasks === 0) {
+      return null;
+    }
+
+    return { text: `${this.taskCompletionRate}%`, tone: 'positive' };
+  }
+
   get recentActivity(): ActivityItem[] {
     const activity: ActivityItem[] = [];
     const latestClient = this.clients[0];
@@ -114,8 +217,8 @@ export class DashboardComponent implements OnInit {
 
     if (latestClient) {
       activity.push({
-        title: 'Client loaded',
-        description: `${latestClient.company} is available in the client workspace.`,
+        title: 'Client created',
+        description: `Added ${latestClient.name} to your workspace.`,
         timestamp: latestClient.lastContact,
         tone: 'green',
         icon: 'client'
@@ -124,8 +227,8 @@ export class DashboardComponent implements OnInit {
 
     if (activeProject) {
       activity.push({
-        title: 'Project in motion',
-        description: `${activeProject.name} is currently marked ${activeProject.status.toLowerCase()}.`,
+        title: 'Project created',
+        description: 'Created a new project.',
         timestamp: activeProject.dueDate,
         tone: 'blue',
         icon: 'approval'
@@ -135,7 +238,7 @@ export class DashboardComponent implements OnInit {
     if (completedTask) {
       activity.push({
         title: 'Task completed',
-        description: `${completedTask.title} has been completed for ${completedTask.project}.`,
+        description: 'Marked a task as complete.',
         timestamp: completedTask.dueDate,
         tone: 'amber',
         icon: 'report'
@@ -180,16 +283,11 @@ export class DashboardComponent implements OnInit {
   }
 
   private getDeadlineMeta(dueDate: string): Pick<DashboardDeadline, 'urgency' | 'urgencyLabel'> {
-    const due = new Date(dueDate);
+    const daysUntilDue = this.getDaysUntilDue(dueDate);
 
-    if (Number.isNaN(due.getTime())) {
+    if (daysUntilDue === null) {
       return { urgency: 'scheduled', urgencyLabel: 'Scheduled' };
     }
-
-    const today = new Date();
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
-    const daysUntilDue = Math.ceil((dueStart.getTime() - todayStart.getTime()) / 86_400_000);
 
     if (daysUntilDue <= 0) {
       return { urgency: 'due-soon', urgencyLabel: daysUntilDue === 0 ? 'Due today' : 'Overdue' };
@@ -204,6 +302,35 @@ export class DashboardComponent implements OnInit {
     }
 
     return { urgency: 'scheduled', urgencyLabel: 'Scheduled' };
+  }
+
+  private getDaysUntilDue(dueDate: string): number | null {
+    const due = new Date(dueDate);
+
+    if (Number.isNaN(due.getTime())) {
+      return null;
+    }
+
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const dueStart = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+
+    return Math.ceil((dueStart.getTime() - todayStart.getTime()) / 86_400_000);
+  }
+
+  private isCurrentMonth(dateValue?: string): boolean {
+    if (!dateValue) {
+      return false;
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
   }
 
   private handleLoadError<T>(fallback: T) {
