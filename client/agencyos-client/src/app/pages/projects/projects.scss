@@ -246,3 +246,17 @@
     display: none;
   }
 }
+
+@media (max-width: 493px) {
+  .page-description {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .projects-toolbar input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

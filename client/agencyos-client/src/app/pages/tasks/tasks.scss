@@ -346,7 +346,25 @@
 }
 
 @media (max-width: 489px) {
+  .page-header,
+  .page-header > div,
   .page-description,
+  .tasks-toolbar,
+  .tasks-toolbar label,
+  .tasks-toolbar input,
+  .tasks-toolbar select {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .page-description {
+    display: block;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    width: 100%;
+  }
+
   .tasks-toolbar input {
     overflow: hidden;
     text-overflow: ellipsis;

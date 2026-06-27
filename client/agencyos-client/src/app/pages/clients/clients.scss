@@ -453,7 +453,12 @@
 }
 
 @media (max-width: 445px) {
-  .page-description,
+  .page-description {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
   .clients-toolbar input {
     overflow: hidden;
     text-overflow: ellipsis;
