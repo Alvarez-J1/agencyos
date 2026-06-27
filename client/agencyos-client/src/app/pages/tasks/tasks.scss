@@ -344,3 +344,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 489px) {
+  .page-description,
+  .tasks-toolbar input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

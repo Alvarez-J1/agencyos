@@ -89,6 +89,13 @@
   justify-self: start;
 }
 
+.client-form-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .clients-toolbar label {
   font-weight: 800;
 }
@@ -419,6 +426,17 @@
     display: grid;
   }
 
+  .client-form-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .client-form-actions .primary-button,
+  .client-form-actions .ghost-button {
+    justify-content: center;
+    width: 100%;
+  }
+
   .clients-toolbar {
     padding: 18px;
   }
@@ -431,5 +449,14 @@
   .client-submit-button,
   .ghost-button {
     justify-self: stretch;
+  }
+}
+
+@media (max-width: 445px) {
+  .page-description,
+  .clients-toolbar input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
