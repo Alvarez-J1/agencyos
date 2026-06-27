@@ -215,6 +215,13 @@
     justify-content: stretch;
   }
 
+  .client-edit-form .form-actions .primary-button,
+  .client-edit-form .form-actions .back-button {
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+  }
+
   .edit-grid {
     grid-template-columns: 1fr;
   }
