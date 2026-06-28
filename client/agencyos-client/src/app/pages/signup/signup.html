@@ -134,22 +134,28 @@
         }
       </label>
 
-      <button class="primary-button" type="submit" [disabled]="isLoading" [attr.aria-busy]="isLoading">
+      <button
+        class="primary-button auth-submit-button"
+        type="submit"
+        [disabled]="isLoading || isDemoLoading"
+        [attr.aria-busy]="isLoading"
+      >
         {{ isLoading ? 'Creating...' : 'Create account' }}
       </button>
     </form>
 
-    <section class="demo-account" aria-label="Demo account credentials">
-      <p>Demo Account</p>
-      <div>
-        <span>Email</span>
-        <strong>demo&#64;agencyos.com</strong>
-      </div>
-      <div>
-        <span>Password</span>
-        <strong>password123</strong>
-      </div>
-    </section>
+    <div class="demo-access">
+      <button
+        type="button"
+        class="secondary-button demo-button"
+        (click)="continueWithDemo()"
+        [disabled]="isLoading || isDemoLoading"
+        [attr.aria-busy]="isDemoLoading"
+      >
+        {{ isDemoLoading ? 'Starting demo...' : 'View Demo' }}
+      </button>
+      <p class="demo-helper">Skip sign up and explore the app with preloaded demo data.</p>
+    </div>
 
     <p class="auth-switch">
       Already have an account?

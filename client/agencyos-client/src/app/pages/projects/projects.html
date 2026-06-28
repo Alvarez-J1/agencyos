@@ -108,39 +108,55 @@
     </div>
   } @else if (filteredProjects.length > 0) {
     <div class="projects-table">
-      <div class="projects-row projects-row-header">
-        <span>Project</span>
-        <span>Client</span>
-        <span>Status</span>
-        <span>Due Date</span>
-        <span>Progress</span>
-        <span></span>
-      </div>
-
       @for (project of filteredProjects; track getProjectRouteId(project)) {
         <div class="projects-row">
-          <div>
+          <div class="project-identity">
             <strong>{{ project.name }}</strong>
             <p class="data-label">ID #{{ project.id }}</p>
           </div>
-          <span>{{ project.client }}</span>
-          <span
-            class="project-status"
-            [class.status-planning]="project.status === 'Planning'"
-            [class.status-progress]="project.status === 'In Progress'"
-            [class.status-review]="project.status === 'Review'"
-            [class.status-completed]="project.status === 'Completed'"
-          >
-            {{ project.status }}
-          </span>
-          <span>{{ project.dueDate }}</span>
-          <div class="progress-cell">
-            <div class="progress-track" aria-hidden="true">
-              <span [style.width.%]="project.progress"></span>
+
+          <dl class="project-meta-list">
+            <div class="project-meta-item">
+              <dt class="project-card-label">Client:</dt>
+              <dd class="project-card-value">{{ project.client }}</dd>
             </div>
-            <strong>{{ project.progress }}%</strong>
+
+            <div class="project-meta-item project-meta-group">
+              <dt class="project-card-label">Status:</dt>
+              <dd class="project-card-value">
+                <span
+                  class="badge"
+                  [class.status-planning]="project.status === 'Planning'"
+                  [class.status-progress]="project.status === 'In Progress'"
+                  [class.status-review]="project.status === 'Review'"
+                  [class.status-completed]="project.status === 'Completed'"
+                >
+                  {{ project.status }}
+                </span>
+              </dd>
+            </div>
+
+            <div class="project-meta-item">
+              <dt class="project-card-label">Due date:</dt>
+              <dd class="project-card-value">{{ project.dueDate }}</dd>
+            </div>
+
+            <div class="project-meta-item project-meta-group">
+              <dt class="project-card-label">Progress:</dt>
+              <dd class="project-card-value">
+                <div class="progress-cell">
+                  <div class="progress-track" aria-hidden="true">
+                    <span [style.width.%]="project.progress"></span>
+                  </div>
+                  <strong>{{ project.progress }}%</strong>
+                </div>
+              </dd>
+            </div>
+          </dl>
+
+          <div class="project-actions">
+            <a class="view-button" [routerLink]="['/projects', getProjectRouteId(project)]">View</a>
           </div>
-          <a class="view-button" [routerLink]="['/projects', getProjectRouteId(project)]">View</a>
         </div>
       }
     </div>

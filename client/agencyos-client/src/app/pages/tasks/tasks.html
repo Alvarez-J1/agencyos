@@ -230,34 +230,42 @@
             <strong>{{ task.title }}</strong>
             <p class="data-label">ID #{{ task.id }}</p>
           </div>
-          <span class="task-meta task-project">
-            <span class="task-card-label">Project</span>
-            <span>{{ task.project }}</span>
-          </span>
-          <span class="task-meta task-assignee">
-            <span class="task-card-label">Assignee</span>
-            <span>{{ task.assignee }}</span>
-          </span>
-          <span
-            class="priority-badge task-priority"
-            [class.priority-low]="task.priority === 'Low'"
-            [class.priority-medium]="task.priority === 'Medium'"
-            [class.priority-high]="task.priority === 'High'"
-          >
-            {{ task.priority }}
-          </span>
-          <span
-            class="task-status"
-            [class.status-todo]="task.status === 'Todo'"
-            [class.status-progress]="task.status === 'In Progress'"
-            [class.status-completed]="task.status === 'Completed'"
-          >
-            {{ task.status }}
-          </span>
-          <span class="task-meta task-due-date">
-            <span class="task-card-label">Due date</span>
-            <span>{{ task.dueDate }}</span>
-          </span>
+
+          <dl class="task-meta-list">
+            <dt class="task-card-label">Project:</dt>
+            <dd class="task-card-value">{{ task.project }}</dd>
+
+            <dt class="task-card-label">Assignee:</dt>
+            <dd class="task-card-value">{{ task.assignee }}</dd>
+
+            <dt class="task-card-label task-meta-group">Priority:</dt>
+            <dd class="task-card-value task-meta-group">
+              <span
+                class="badge"
+                [class.priority-low]="task.priority === 'Low'"
+                [class.priority-medium]="task.priority === 'Medium'"
+                [class.priority-high]="task.priority === 'High'"
+              >
+                {{ task.priority }}
+              </span>
+            </dd>
+
+            <dt class="task-card-label">Status:</dt>
+            <dd class="task-card-value">
+              <span
+                class="badge"
+                [class.status-todo]="task.status === 'Todo'"
+                [class.status-progress]="task.status === 'In Progress'"
+                [class.status-completed]="task.status === 'Completed'"
+              >
+                {{ task.status }}
+              </span>
+            </dd>
+
+            <dt class="task-card-label task-meta-group">Due date:</dt>
+            <dd class="task-card-value task-meta-group">{{ task.dueDate }}</dd>
+          </dl>
+
           <div class="task-actions">
             <button class="edit-button" type="button" [attr.aria-label]="'Edit ' + task.title" (click)="openEditModal(task)">
               Edit

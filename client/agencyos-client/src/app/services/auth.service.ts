@@ -22,6 +22,10 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, data).pipe(tap((response) => this.saveSession(response)));
   }
 
+  demoLogin(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/demo`, {}).pipe(tap((response) => this.saveSession(response)));
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);

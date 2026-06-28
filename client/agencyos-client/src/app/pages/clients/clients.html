@@ -81,36 +81,53 @@
     </div>
   } @else if (filteredClients.length > 0) {
     <div class="clients-table">
-      <div class="clients-row clients-row-header">
-        <span>Client</span>
-        <span>Email</span>
-        <span>Status</span>
-        <span>Active Projects</span>
-        <span>Last Contact</span>
-        <span>Action</span>
-      </div>
-
       @for (client of filteredClients; track getClientRouteId(client)) {
         <div class="clients-row">
           <div class="client-identity">
             <strong>{{ client.name }}</strong>
-            <p class="data-label">{{ client.company }}</p>
           </div>
-          <a class="client-email" href="mailto:{{ client.email }}">{{ client.email }}</a>
-          <div class="client-card-meta">
-            <span class="status-pill client-status" [class.status-paused]="client.status === 'Paused'">
-              {{ client.status }}
-            </span>
-            <span class="project-count">
-              <span class="project-count-value">{{ client.activeProjects }}</span>
-              <span class="project-count-label">{{ client.activeProjects === 1 ? 'project' : 'projects' }}</span>
-            </span>
-            <span class="client-last-contact">
-              <span class="client-last-contact-label">Last contact</span>
-              <span>{{ client.lastContact }}</span>
-            </span>
+
+          <dl class="client-meta-list">
+            <div class="client-meta-item">
+              <dt class="client-card-label">Company:</dt>
+              <dd class="client-card-value">{{ client.company }}</dd>
+            </div>
+
+            <div class="client-meta-item">
+              <dt class="client-card-label">Email:</dt>
+              <dd class="client-card-value">
+                <a class="client-email" href="mailto:{{ client.email }}">{{ client.email }}</a>
+              </dd>
+            </div>
+
+            <div class="client-meta-item client-meta-group">
+              <dt class="client-card-label">Status:</dt>
+              <dd class="client-card-value">
+                <span
+                  class="badge"
+                  [class.status-active]="client.status === 'Active'"
+                  [class.status-onboarding]="client.status === 'Onboarding'"
+                  [class.status-paused]="client.status === 'Paused'"
+                >
+                  {{ client.status }}
+                </span>
+              </dd>
+            </div>
+
+            <div class="client-meta-item">
+              <dt class="client-card-label">Projects:</dt>
+              <dd class="client-card-value">{{ client.activeProjects }} {{ client.activeProjects === 1 ? 'project' : 'projects' }}</dd>
+            </div>
+
+            <div class="client-meta-item client-meta-group">
+              <dt class="client-card-label">Last contact:</dt>
+              <dd class="client-card-value">{{ client.lastContact }}</dd>
+            </div>
+          </dl>
+
+          <div class="client-actions">
+            <a class="client-view-link" [routerLink]="['/clients', getClientRouteId(client)]">View</a>
           </div>
-          <a class="text-link client-view-link" [routerLink]="['/clients', getClientRouteId(client)]">View</a>
         </div>
       }
     </div>

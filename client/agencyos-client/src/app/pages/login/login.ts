@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
 
   submitted = false;
   isLoading = false;
+  isDemoLoading = false;
   showPassword = false;
   errorMessage = '';
   passwordPlaceholder = 'Enter your password';
@@ -74,6 +75,27 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
         this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+      }
+    });
+  }
+
+  continueWithDemo(): void {
+    if (this.isLoading || this.isDemoLoading) {
+      return;
+    }
+
+    this.errorMessage = '';
+    this.isDemoLoading = true;
+
+    this.authService.demoLogin().subscribe({
+      next: () => {
+        this.isDemoLoading = false;
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+        this.router.navigateByUrl(returnUrl);
+      },
+      error: (error) => {
+        this.isDemoLoading = false;
+        this.errorMessage = error.error?.message || 'Unable to start the demo right now. Please try again.';
       }
     });
   }

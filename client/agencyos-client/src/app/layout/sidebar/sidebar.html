@@ -11,14 +11,32 @@
         [routerLinkActiveOptions]="{ exact: item.exact }"
         ariaCurrentWhenActive="page"
       >
-        {{ item.label }}
+        @switch (item.icon) {
+          @case ('home') {
+            <svg lucideHouse class="sidebar-icon" aria-hidden="true"></svg>
+          }
+          @case ('clients') {
+            <svg lucideUsers class="sidebar-icon" aria-hidden="true"></svg>
+          }
+          @case ('projects') {
+            <svg lucideFolderKanban class="sidebar-icon" aria-hidden="true"></svg>
+          }
+          @case ('tasks') {
+            <svg lucideCheckSquare class="sidebar-icon" aria-hidden="true"></svg>
+          }
+          @case ('settings') {
+            <svg lucideSettings class="sidebar-icon" aria-hidden="true"></svg>
+          }
+        }
+        <span>{{ item.label }}</span>
       </a>
     }
   </nav>
 
   <div class="sidebar-footer">
     <button class="signout-button" type="button" (click)="signOut()">
-      Sign Out
+      <svg lucideLogOut class="sidebar-icon" aria-hidden="true"></svg>
+      <span>Sign Out</span>
     </button>
   </div>
 </aside>

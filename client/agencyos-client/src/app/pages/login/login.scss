@@ -219,48 +219,35 @@
   padding-inline: var(--auth-password-button-padding, 14px);
 }
 
-.login-card .primary-button {
+.login-card .primary-button.auth-submit-button {
+  justify-self: stretch;
   min-height: 44px;
   padding: var(--auth-submit-padding, 8px 16px);
+  width: 100%;
 }
 
 .login-card .field-error {
   color: var(--color-danger);
 }
 
-.demo-account {
-  background: rgba(15, 18, 24, 0.72);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+.demo-access {
   display: grid;
   gap: var(--auth-demo-gap, 8px);
-  padding: var(--auth-demo-padding, 16px);
 }
 
-.demo-account p {
-  color: var(--color-text);
-  font-size: 0.92rem;
-  font-weight: 850;
-  margin: 0;
+.login-card .demo-button {
+  justify-self: stretch;
+  min-height: 44px;
+  padding: var(--auth-submit-padding, 8px 16px);
+  width: 100%;
 }
 
-.demo-account div {
-  align-items: center;
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-}
-
-.demo-account span {
+.demo-helper {
   color: var(--color-soft);
   font-size: 0.82rem;
-  font-weight: 750;
-}
-
-.demo-account strong {
-  color: var(--color-muted);
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
 }
 
 @media (max-width: 1023px) {
@@ -327,9 +314,10 @@
     margin-top: 0;
   }
 
-  .login-card .primary-button {
-    justify-self: center;
-    width: min(100%, var(--auth-submit-width));
+  .login-card .primary-button.auth-submit-button,
+  .login-card .demo-button {
+    justify-self: stretch;
+    width: 100%;
   }
 }
 
@@ -360,9 +348,10 @@
     justify-self: center;
   }
 
-  .login-card .primary-button {
-    justify-self: center;
-    width: min(100%, var(--auth-submit-width));
+  .login-card .primary-button.auth-submit-button,
+  .login-card .demo-button {
+    justify-self: stretch;
+    width: 100%;
   }
 }
 

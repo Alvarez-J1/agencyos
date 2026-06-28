@@ -47,6 +47,7 @@
   border-radius: var(--radius-md);
   color: rgba(229, 231, 235, 0.82);
   display: flex;
+  gap: 12px;
   font-weight: 800;
   min-height: 48px;
   padding: 8px 18px;
@@ -55,6 +56,22 @@
     background 160ms ease,
     color 160ms ease,
     transform 160ms ease;
+}
+
+.sidebar-icon {
+  color: currentColor;
+  flex: 0 0 19px;
+  height: 19px;
+  stroke-width: 2;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+  width: 19px;
+}
+
+.sidebar-nav a span,
+.signout-button span {
+  min-width: 0;
 }
 
 .signout-button {
@@ -68,7 +85,7 @@
 .sidebar-nav a:hover,
 .sidebar-nav a.active {
   background: rgba(124, 156, 255, 0.1);
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .signout-button:hover {

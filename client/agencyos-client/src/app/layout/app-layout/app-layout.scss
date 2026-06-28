@@ -24,3 +24,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (min-width: 401px) and (max-width: 767px) {
+  .app-shell {
+    min-width: 752px;
+  }
+}
