@@ -1,7 +1,25 @@
-<aside class="sidebar" aria-label="AgencyOS navigation">
-  <a class="sidebar-brand" routerLink="/dashboard">
-    <img class="brand-logo" src="agencyos-logo.png" alt="AgencyOS" />
-  </a>
+<div
+  class="drawer-backdrop"
+  [class.visible]="nav.isOpen()"
+  (click)="nav.close()"
+  aria-hidden="true"
+></div>
+
+<aside
+  id="primary-navigation"
+  class="sidebar"
+  [class.open]="nav.isOpen()"
+  aria-label="AgencyOS navigation"
+>
+  <div class="drawer-header">
+    <a class="sidebar-brand" routerLink="/dashboard" (click)="nav.close()">
+      <img class="brand-logo" src="agencyos-logo.png" alt="AgencyOS" />
+    </a>
+
+    <button class="drawer-close" type="button" (click)="nav.close()" aria-label="Close navigation menu">
+      <svg lucideX class="nav-icon" aria-hidden="true"></svg>
+    </button>
+  </div>
 
   <nav class="sidebar-nav" aria-label="Primary">
     @for (item of navItems; track item.route) {
@@ -10,6 +28,7 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: item.exact }"
         ariaCurrentWhenActive="page"
+        (click)="nav.close()"
       >
         @switch (item.icon) {
           @case ('home') {

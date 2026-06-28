@@ -120,7 +120,7 @@
 }
 
 .clients-table {
-  align-items: start;
+  align-items: stretch;
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -234,6 +234,7 @@
 
 .client-actions {
   display: grid;
+  margin-top: auto;
   width: 100%;
 }
 
@@ -306,30 +307,10 @@
   }
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1100px) {
   .clients-table {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: 792px;
-  }
-}
-
-@media (max-width: 400px) {
-  .clients-table {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
-
-  .clients-row {
-    padding: 16px;
-  }
-}
-
-@media (min-width: 401px) and (max-width: 767px) {
-  .clients-table {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: none;
-    min-width: 704px;
-    width: 704px;
   }
 }
 
@@ -370,5 +351,59 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+/* 400px–721px: two cards per row. Cards are narrow, so each metadata label
+   stacks above its value to keep long text and badges from overflowing. */
+@media (max-width: 721px) {
+  .clients-table {
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .clients-row {
+    padding: 12px;
+  }
+
+  .clients-toolbar {
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .clients-toolbar input {
+    width: 100%;
+  }
+
+  .client-meta-item {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+}
+
+/* Below 400px: one card per row, with the roomier inline label/value. */
+@media (max-width: 399px) {
+  .clients-table {
+    grid-template-columns: 1fr;
+  }
+
+  .clients-row {
+    padding: 16px;
+  }
+
+  .client-meta-item {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+}
+
+/* Tablet (767–966px): sidebar is visible. Keep two cards per row. */
+@media (min-width: 767px) and (max-width: 966px) {
+  .clients-table {
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
   }
 }

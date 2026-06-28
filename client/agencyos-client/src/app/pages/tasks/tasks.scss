@@ -36,7 +36,7 @@
 }
 
 .tasks-table {
-  align-items: start;
+  align-items: stretch;
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -168,8 +168,9 @@
 .task-actions {
   display: grid;
   gap: 8px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   justify-content: flex-start;
+  margin-top: auto;
   width: 100%;
 }
 
@@ -291,41 +292,57 @@
   }
 }
 
-@media (min-width: 401px) and (max-width: 767px) {
-  .tasks-toolbar,
+/* 400px–721px: two cards per row + stacked filters. Each metadata label
+   stacks above its value so long text and badges never overflow. */
+@media (max-width: 721px) {
   .tasks-table {
-    min-width: 704px;
-    width: 704px;
-  }
-
-  .tasks-table {
+    gap: 16px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: none;
-  }
-}
-
-@media (max-width: 400px) {
-  .tasks-table {
-    grid-template-columns: 1fr;
-    max-width: none;
+    min-width: 0;
+    width: 100%;
   }
 
   .tasks-toolbar {
     gap: 10px;
     grid-template-columns: 1fr;
-    padding: 18px;
+    min-width: 0;
+    padding: 16px;
+    width: 100%;
   }
 
   .tasks-toolbar label:first-child {
     grid-column: auto;
   }
 
+  .tasks-toolbar input,
+  .tasks-toolbar select {
+    width: 100%;
+  }
+
+  .tasks-row {
+    padding: 12px;
+  }
+
+  .task-meta-list {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 4px;
+  }
+}
+
+/* Below 400px: one card per row, with the roomier inline label/value. */
+@media (max-width: 399px) {
+  .tasks-table {
+    grid-template-columns: 1fr;
+  }
+
   .tasks-row {
     padding: 16px;
   }
 
-  .task-actions {
-    grid-template-columns: 1fr;
+  .task-meta-list {
+    grid-template-columns: max-content minmax(0, 1fr);
+    row-gap: 8px;
   }
 }
 
@@ -355,3 +372,14 @@
     white-space: nowrap;
   }
 }
+
+/* Tablet (767–966px): sidebar is visible. Keep two cards per row; the stacked
+   action buttons let the cards stay narrow without clipping. */
+@media (min-width: 767px) and (max-width: 966px) {
+  .tasks-table {
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+

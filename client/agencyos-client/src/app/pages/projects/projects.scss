@@ -34,7 +34,7 @@
 }
 
 .projects-table {
-  align-items: start;
+  align-items: stretch;
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -169,6 +169,7 @@
 
 .project-actions {
   display: grid;
+  margin-top: auto;
 }
 
 .view-button {
@@ -195,7 +196,7 @@
   box-shadow: 0 0 24px rgba(124, 156, 255, 0.14);
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1100px) {
   .projects-table {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: 792px;
@@ -211,34 +212,6 @@
 
   .projects-toolbar :is(input, select) {
     width: 100%;
-  }
-}
-
-@media (min-width: 401px) and (max-width: 767px) {
-  .projects-toolbar,
-  .projects-table {
-    min-width: 704px;
-    width: 704px;
-  }
-
-  .projects-table {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 400px) {
-  .projects-table {
-    grid-template-columns: 1fr;
-  }
-
-  .projects-toolbar {
-    gap: 10px;
-    grid-template-columns: 1fr;
-    padding: 18px;
-  }
-
-  .projects-row {
-    padding: 16px;
   }
 }
 
@@ -265,5 +238,62 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+/* 400px–721px: two cards per row + stacked filters. Metadata labels stack
+   above their values so long names/badges never overflow narrow cards. */
+@media (max-width: 721px) {
+  .projects-table {
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .projects-toolbar {
+    gap: 12px;
+    grid-template-columns: 1fr;
+    min-width: 0;
+    padding: 16px;
+    width: 100%;
+  }
+
+  .projects-toolbar :is(input, select) {
+    width: 100%;
+  }
+
+  .projects-row {
+    padding: 12px;
+  }
+
+  .project-meta-item {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+}
+
+/* Below 400px: one card per row, with the roomier inline label/value. */
+@media (max-width: 399px) {
+  .projects-table {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-row {
+    padding: 16px;
+  }
+
+  .project-meta-item {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+}
+
+/* Tablet (767–966px): sidebar is visible. Keep two cards per row. */
+@media (min-width: 767px) and (max-width: 966px) {
+  .projects-table {
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
   }
 }

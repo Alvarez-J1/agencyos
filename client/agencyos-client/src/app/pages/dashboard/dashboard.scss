@@ -525,7 +525,6 @@
 }
 
 @media (max-width: 820px) {
-  .metric-grid,
   .work-panel {
     grid-template-columns: 1fr;
   }
@@ -583,5 +582,12 @@
   .deadline-main strong,
   .deadline-main span span {
     white-space: normal;
+  }
+}
+
+/* Below 400px: stack metric cards one per row. */
+@media (max-width: 399px) {
+  .metric-grid {
+    grid-template-columns: 1fr;
   }
 }

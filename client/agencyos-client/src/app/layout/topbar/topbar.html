@@ -1,7 +1,20 @@
 <header class="topbar">
-  <div>
-    <p class="topbar-label">Workspace</p>
-    <strong>Agency operations home</strong>
+  <div class="topbar-lead">
+    <button
+      class="nav-toggle"
+      type="button"
+      (click)="nav.toggle()"
+      [attr.aria-expanded]="nav.isOpen()"
+      aria-controls="primary-navigation"
+      aria-label="Open navigation menu"
+    >
+      <svg lucideMenu class="nav-icon" aria-hidden="true"></svg>
+    </button>
+
+    <div class="topbar-heading">
+      <p class="topbar-label">Workspace</p>
+      <strong>Agency operations home</strong>
+    </div>
   </div>
 
   <div class="topbar-actions">

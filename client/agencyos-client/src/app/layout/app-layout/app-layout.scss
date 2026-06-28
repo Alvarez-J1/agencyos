@@ -19,14 +19,26 @@
   width: 100%;
 }
 
-@media (max-width: 900px) {
+/* Tablet (767–966px): keep the sidebar but slim it down and trim page padding
+   so the content column has more room for the cards. */
+@media (min-width: 767px) and (max-width: 966px) {
+  .app-shell {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 766px) {
   .app-shell {
     grid-template-columns: 1fr;
   }
 }
 
-@media (min-width: 401px) and (max-width: 767px) {
-  .app-shell {
-    min-width: 752px;
+@media (max-width: 721px) {
+  .main-content {
+    padding: 16px;
   }
 }

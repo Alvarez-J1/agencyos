@@ -13,6 +13,27 @@
   z-index: 5;
 }
 
+.topbar-lead {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.topbar-heading {
+  min-width: 0;
+}
+
+/* Hamburger — hidden on desktop, shown on mobile. */
+.nav-toggle {
+  display: none;
+}
+
+.nav-icon {
+  height: 22px;
+  width: 22px;
+}
+
 .topbar-label {
   color: var(--color-muted);
   font-size: 0.85rem;
@@ -126,22 +147,42 @@
   transform: translateY(-1px);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 766px) {
   .topbar {
-    align-items: stretch;
-    flex-direction: column;
-    padding: 16px 24px;
+    gap: 12px;
+    min-height: 64px;
+    padding: 12px 16px;
   }
 
-  .topbar-actions {
-    align-items: stretch;
+  .nav-toggle {
+    align-items: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
   }
 
-  .topbar-actions input {
-    width: 100%;
+  .topbar strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Compact account control: avatar only, to leave room on small screens. */
+  .account-copy,
+  .account-chevron {
+    display: none;
   }
 
   .account-link {
-    justify-content: start;
+    flex: 0 0 auto;
+    padding: 6px;
   }
 }
