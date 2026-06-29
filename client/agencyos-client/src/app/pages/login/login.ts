@@ -2,11 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { PreviewTiltDirective } from '../../directives/preview-tilt.directive';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, PreviewTiltDirective],
   templateUrl: './login.html',
   styleUrls: ['../auth.scss', './login.scss']
 })

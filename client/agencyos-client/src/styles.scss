@@ -576,3 +576,92 @@ button:disabled {
     display: grid;
   }
 }
+
+.product-preview {
+  --preview-glow-opacity: 0.52;
+  --preview-glow-x: 0px;
+  --preview-glow-y: 0px;
+  --preview-image-x: 0px;
+  --preview-image-y: 0px;
+  --preview-rotate-x: 0deg;
+  --preview-rotate-y: 0deg;
+  --preview-scale: 1;
+  isolation: isolate;
+  perspective: 1200px;
+  position: relative;
+  transform-style: preserve-3d;
+  touch-action: pan-y;
+  width: min(100%, 880px);
+}
+
+.product-preview::before {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(124, 156, 255, 0.34), transparent 62%),
+    radial-gradient(circle at 60% 42%, rgba(45, 212, 191, 0.12), transparent 58%);
+  content: "";
+  filter: blur(32px);
+  inset: -18% -12% -14%;
+  opacity: var(--preview-glow-opacity);
+  pointer-events: none;
+  position: absolute;
+  transform: translate3d(var(--preview-glow-x), var(--preview-glow-y), 0);
+  will-change: transform, opacity;
+  z-index: -1;
+}
+
+.product-preview-inner {
+  background: rgba(20, 25, 34, 0.62);
+  border: 1px solid rgba(229, 231, 235, 0.1);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.045) inset,
+    0 18px 52px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+  position: relative;
+  transform:
+    rotateX(var(--preview-rotate-x))
+    rotateY(var(--preview-rotate-y))
+    scale(var(--preview-scale))
+    translateZ(0);
+  transform-style: preserve-3d;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  will-change: transform;
+}
+
+.product-preview.preview-active .product-preview-inner {
+  border-color: rgba(124, 156, 255, 0.22);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.055) inset,
+    0 24px 72px rgba(0, 0, 0, 0.34),
+    0 0 42px rgba(124, 156, 255, 0.1);
+}
+
+.product-preview-media {
+  display: block;
+  transform: translate3d(var(--preview-image-x), var(--preview-image-y), 28px) scale(1.012);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.product-preview-media img {
+  display: block;
+  filter: brightness(1.16) contrast(1.1) saturate(1.04);
+  opacity: 0.9;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-preview::before,
+  .product-preview-inner,
+  .product-preview-media {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+
+  .product-preview::before {
+    opacity: 0.42;
+  }
+}
