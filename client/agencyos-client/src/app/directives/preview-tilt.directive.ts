@@ -7,6 +7,8 @@ import { Directive, ElementRef, HostListener, NgZone, OnDestroy, inject } from '
 export class PreviewTiltDirective implements OnDestroy {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly ngZone = inject(NgZone);
+  private readonly maxRotationDegrees = 7;
+  private readonly touchStartResponse = 0.68;
 
   private animationFrame = 0;
   private reducedMotion = false;
@@ -54,6 +56,10 @@ export class PreviewTiltDirective implements OnDestroy {
       return;
     }
 
+    if (this.isActiveTouchPointer(event)) {
+      this.preventNativeTouchGesture(event);
+    }
+
     this.updateTargetFromPointer(event);
     this.state.targetHover = 1;
     this.startAnimation();
@@ -65,26 +71,44 @@ export class PreviewTiltDirective implements OnDestroy {
       return;
     }
 
+    this.preventNativeTouchGesture(event);
     this.activeTouchPointerId = event.pointerId;
+    this.capturePointer(event);
     this.updateTargetFromPointer(event);
     this.state.targetHover = 1;
+    this.primeTouchTilt();
     this.elementRef.nativeElement.classList.add('preview-active');
     this.startAnimation();
   }
 
   @HostListener('pointerup', ['$event'])
   onPointerUp(event: PointerEvent): void {
-    if (this.activeTouchPointerId !== event.pointerId) {
+    if (!this.isActiveTouchPointer(event)) {
       return;
     }
 
+    this.preventNativeTouchGesture(event);
+    this.releasePointer(event.pointerId);
     this.activeTouchPointerId = null;
     this.resetPreview();
   }
 
-  @HostListener('pointerleave')
-  @HostListener('pointercancel')
-  onPointerLeave(): void {
+  @HostListener('pointerleave', ['$event'])
+  onPointerLeave(event: PointerEvent): void {
+    if (!this.canHoverAnimate(event)) {
+      return;
+    }
+
+    this.resetPreview();
+  }
+
+  @HostListener('pointercancel', ['$event'])
+  onPointerCancel(event: PointerEvent): void {
+    if (this.activeTouchPointerId !== null && this.activeTouchPointerId !== event.pointerId) {
+      return;
+    }
+
+    this.releasePointer(event.pointerId);
     this.activeTouchPointerId = null;
     this.resetPreview();
   }
@@ -117,6 +141,10 @@ export class PreviewTiltDirective implements OnDestroy {
     return this.activeTouchPointerId === event.pointerId;
   }
 
+  private isActiveTouchPointer(event: PointerEvent): boolean {
+    return this.activeTouchPointerId === event.pointerId && this.canTouchAnimate(event);
+  }
+
   private updateTargetFromPointer(event: PointerEvent): void {
     const bounds = this.elementRef.nativeElement.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width;
@@ -124,6 +152,52 @@ export class PreviewTiltDirective implements OnDestroy {
 
     this.state.targetX = this.clamp((x - 0.5) * 2, -1, 1);
     this.state.targetY = this.clamp((y - 0.5) * 2, -1, 1);
+  }
+
+  private primeTouchTilt(): void {
+    this.state.velocityX = 0;
+    this.state.velocityY = 0;
+    this.state.hoverVelocity = 0;
+    this.state.x += (this.state.targetX - this.state.x) * this.touchStartResponse;
+    this.state.y += (this.state.targetY - this.state.y) * this.touchStartResponse;
+    this.state.hover = Math.max(this.state.hover, this.touchStartResponse);
+    this.applyStyles();
+  }
+
+  private capturePointer(event: PointerEvent): void {
+    const element = this.elementRef.nativeElement;
+
+    if (typeof element.setPointerCapture !== 'function') {
+      return;
+    }
+
+    try {
+      element.setPointerCapture(event.pointerId);
+    } catch {
+      // The browser may reject capture if the pointer has already ended.
+    }
+  }
+
+  private releasePointer(pointerId: number): void {
+    const element = this.elementRef.nativeElement;
+
+    if (typeof element.releasePointerCapture !== 'function') {
+      return;
+    }
+
+    try {
+      if (typeof element.hasPointerCapture !== 'function' || element.hasPointerCapture(pointerId)) {
+        element.releasePointerCapture(pointerId);
+      }
+    } catch {
+      // Ignore stale pointer ids from canceled touch interactions.
+    }
+  }
+
+  private preventNativeTouchGesture(event: PointerEvent): void {
+    if (event.cancelable) {
+      event.preventDefault();
+    }
   }
 
   private startAnimation(): void {
@@ -167,8 +241,8 @@ export class PreviewTiltDirective implements OnDestroy {
     const y = this.state.y;
     const hover = this.clamp(this.state.hover, 0, 1);
 
-    element.style.setProperty('--preview-rotate-x', `${(-y * 7).toFixed(3)}deg`);
-    element.style.setProperty('--preview-rotate-y', `${(x * 7).toFixed(3)}deg`);
+    element.style.setProperty('--preview-rotate-x', `${(-y * this.maxRotationDegrees).toFixed(3)}deg`);
+    element.style.setProperty('--preview-rotate-y', `${(x * this.maxRotationDegrees).toFixed(3)}deg`);
     element.style.setProperty('--preview-scale', (1 + hover * 0.015).toFixed(4));
     element.style.setProperty('--preview-image-x', `${(x * 4).toFixed(2)}px`);
     element.style.setProperty('--preview-image-y', `${(y * 3).toFixed(2)}px`);

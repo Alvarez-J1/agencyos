@@ -591,6 +591,7 @@ button:disabled {
   position: relative;
   transform-style: preserve-3d;
   touch-action: pan-y;
+  user-select: none;
   width: min(100%, 880px);
 }
 
@@ -649,7 +650,15 @@ button:disabled {
   display: block;
   filter: brightness(1.16) contrast(1.1) saturate(1.04);
   opacity: 0.9;
+  pointer-events: none;
+  user-select: none;
   width: 100%;
+}
+
+@media (any-pointer: coarse) {
+  .product-preview {
+    touch-action: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
